@@ -143,8 +143,8 @@ export default function PerceptionMap({ products }) {
           </YAxis>
 
           {/* Quadrant dividers */}
-          <ReferenceLine x={5.5} stroke={refLineColor} strokeDasharray="5 5" />
-          <ReferenceLine y={5.5} stroke={refLineColor} strokeDasharray="5 5" />
+          <ReferenceLine x={5} stroke={refLineColor} strokeDasharray="5 5" />
+          <ReferenceLine y={5} stroke={refLineColor} strokeDasharray="5 5" />
 
           <Tooltip content={<CustomTooltip />} />
           <Scatter

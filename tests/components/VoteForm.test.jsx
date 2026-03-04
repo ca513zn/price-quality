@@ -38,10 +38,10 @@ describe("VoteForm", () => {
     expect(screen.getByRole("button", { name: /submit vote/i })).toBeInTheDocument();
   });
 
-  it("shows the correct quadrant preview based on defaults (5,5 = Budget)", () => {
+  it("shows the correct quadrant preview based on defaults (5,5 = Premium)", () => {
     render(<VoteForm productId="p1" productName="Test Product" />);
-    // 5 < 5.5 for both = Budget
-    expect(screen.getByText("Budget")).toBeInTheDocument();
+    // 5 >= 5 for both = Premium
+    expect(screen.getByText("Premium")).toBeInTheDocument();
   });
 
   it("updates quadrant when sliders change", () => {

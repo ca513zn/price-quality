@@ -61,21 +61,21 @@ describe("getQuadrant", () => {
     expect(getQuadrant(2, 2)).toBe("Budget");
   });
 
-  // Boundary cases at the midpoint (5.5)
-  it("returns 'Premium' when both scores are exactly 5.5", () => {
-    expect(getQuadrant(5.5, 5.5)).toBe("Premium");
+  // Boundary cases at the midpoint (5)
+  it("returns 'Premium' when both scores are exactly 5", () => {
+    expect(getQuadrant(5, 5)).toBe("Premium");
   });
 
-  it("returns 'Budget' when both scores are just below 5.5", () => {
-    expect(getQuadrant(5.49, 5.49)).toBe("Budget");
+  it("returns 'Budget' when both scores are just below 5", () => {
+    expect(getQuadrant(4.99, 4.99)).toBe("Budget");
   });
 
-  it("returns 'Overpriced' for price=5.5, quality=5.49", () => {
-    expect(getQuadrant(5.5, 5.49)).toBe("Overpriced");
+  it("returns 'Overpriced' for price=5, quality=4.99", () => {
+    expect(getQuadrant(5, 4.99)).toBe("Overpriced");
   });
 
-  it("returns 'Best Value' for price=5.49, quality=5.5", () => {
-    expect(getQuadrant(5.49, 5.5)).toBe("Best Value");
+  it("returns 'Best Value' for price=4.99, quality=5", () => {
+    expect(getQuadrant(4.99, 5)).toBe("Best Value");
   });
 
   // Edge values
