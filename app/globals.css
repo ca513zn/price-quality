@@ -10,3 +10,14 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Recharts tooltip: no slide, just fade in */
+.recharts-tooltip-wrapper {
+  transition: none !important;
+  animation: tooltipFadeIn 0.15s ease-out;
+}
+
+@keyframes tooltipFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

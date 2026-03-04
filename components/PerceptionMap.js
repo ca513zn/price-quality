@@ -12,17 +12,16 @@ import {
   Label,
 } from "recharts";
 import { getQuadrantColor, getQuadrant } from "@/lib/utils";
-import { useTheme } from "@/components/ThemeProvider";
 
 function CustomTooltip({ active, payload }) {
   if (active && payload && payload.length) {
     const data = payload[0].payload;
     const quadrant = getQuadrant(data.avgPriceScore, data.avgQualityScore);
     return (
-      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg p-3 text-sm">
-        <p className="font-bold text-gray-900 dark:text-gray-100">{data.name}</p>
-        <p className="text-gray-600 dark:text-gray-400">{data.brandName}</p>
-        <div className="mt-1 space-y-0.5 text-gray-700 dark:text-gray-300">
+      <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-3 text-sm">
+        <p className="font-bold text-gray-900">{data.name}</p>
+        <p className="text-gray-600">{data.brandName}</p>
+        <div className="mt-1 space-y-0.5">
           <p>
             Price: <span className="font-medium">{data.avgPriceScore.toFixed(1)}</span>/10
           </p>
@@ -49,18 +48,18 @@ function CustomTooltip({ active, payload }) {
 }
 
 function CustomDot(props) {
-  const { cx, cy, payload, labelColor = "#374151", strokeColor = "#fff" } = props;
+  const { cx, cy, payload } = props;
   const quadrant = getQuadrant(payload.avgPriceScore, payload.avgQualityScore);
   const color = getQuadrantColor(quadrant);
 
   return (
     <g>
-      <circle cx={cx} cy={cy} r={8} fill={color} opacity={0.8} stroke={strokeColor} strokeWidth={2} />
+      <circle cx={cx} cy={cy} r={8} fill={color} opacity={0.8} stroke="#fff" strokeWidth={2} />
       <text
         x={cx}
         y={cy - 14}
         textAnchor="middle"
-        fill={labelColor}
+        fill="#374151"
         fontSize={11}
         fontWeight={500}
       >
@@ -71,16 +70,6 @@ function CustomDot(props) {
 }
 
 export default function PerceptionMap({ products }) {
-  const { theme } = useTheme();
-  const isDark = theme === "dark";
-
-  const gridColor = isDark ? "#374151" : "#e5e7eb";
-  const refLineColor = isDark ? "#4b5563" : "#d1d5db";
-  const tickColor = isDark ? "#9ca3af" : undefined;
-  const labelColor = isDark ? "#9ca3af" : "#6b7280";
-  const dotLabelColor = isDark ? "#d1d5db" : "#374151";
-  const dotStroke = isDark ? "#1f2937" : "#fff";
-
   const data = products.map((p) => ({
     name: p.name,
     brandName: p.brand?.name || p.brandName || "",
@@ -100,28 +89,27 @@ export default function PerceptionMap({ products }) {
               className="w-3 h-3 rounded-full"
               style={{ backgroundColor: getQuadrantColor(q) }}
             />
-            <span className="text-gray-700 dark:text-gray-300">{q}</span>
+            <span className="text-gray-700">{q}</span>
           </div>
         ))}
       </div>
 
       <ResponsiveContainer width="100%" height={500}>
         <ScatterChart margin={{ top: 20, right: 40, bottom: 30, left: 20 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+          <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
           <XAxis
             type="number"
             dataKey="avgPriceScore"
             name="Perceived Price"
             domain={[0, 10]}
             ticks={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
-            tick={{ fontSize: 12, fill: tickColor }}
-            stroke={gridColor}
+            tick={{ fontSize: 12 }}
           >
             <Label
               value="Perceived Price →"
               offset={-10}
               position="insideBottom"
-              style={{ fontSize: 13, fill: labelColor }}
+              style={{ fontSize: 13, fill: "#6b7280" }}
             />
           </XAxis>
           <YAxis
@@ -130,26 +118,25 @@ export default function PerceptionMap({ products }) {
             name="Perceived Quality"
             domain={[0, 10]}
             ticks={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
-            tick={{ fontSize: 12, fill: tickColor }}
-            stroke={gridColor}
+            tick={{ fontSize: 12 }}
           >
             <Label
               value="Perceived Quality →"
               angle={-90}
               position="insideLeft"
               offset={10}
-              style={{ fontSize: 13, fill: labelColor }}
+              style={{ fontSize: 13, fill: "#6b7280" }}
             />
           </YAxis>
 
           {/* Quadrant dividers */}
-          <ReferenceLine x={5} stroke={refLineColor} strokeDasharray="5 5" />
-          <ReferenceLine y={5} stroke={refLineColor} strokeDasharray="5 5" />
+          <ReferenceLine x={5.5} stroke="#d1d5db" strokeDasharray="5 5" />
+          <ReferenceLine y={5.5} stroke="#d1d5db" strokeDasharray="5 5" />
 
-          <Tooltip content={<CustomTooltip />} animationDuration={0} />
+          <Tooltip content={<CustomTooltip />} />
           <Scatter
             data={data}
-            shape={(props) => <CustomDot {...props} labelColor={dotLabelColor} strokeColor={dotStroke} />}
+            shape={<CustomDot />}
           />
         </ScatterChart>
       </ResponsiveContainer>
