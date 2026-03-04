@@ -4,40 +4,109 @@ import { useTheme } from "@/components/ThemeProvider";
 
 export default function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
+  const isDark = theme === "dark";
+
+  const W = 64;
+  const H = 30;
+  const thumbR = 10;
+  const padding = 5;
+  const thumbCx = isDark ? W - padding - thumbR : padding + thumbR;
 
   return (
     <button
       onClick={toggleTheme}
-      className="relative inline-flex items-center justify-center w-9 h-9 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-      aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-      title={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+      aria-label="Toggle dark mode"
+      style={{
+        position: "relative",
+        overflow: "hidden",
+        width: `${W}px`,
+        height: `${H}px`,
+        borderRadius: `${H}px`,
+        border: "none",
+        cursor: "pointer",
+        background: isDark
+          ? "linear-gradient(180deg, #1a1a2e, #16213e, #0f3460)"
+          : "linear-gradient(180deg, #56b4f9, #7cc8f9, #a8dcfa)",
+        transition: "background 0.5s ease",
+        padding: 0,
+        flexShrink: 0,
+      }}
     >
-      {/* Sun icon - shown in dark mode */}
       <svg
-        className="h-4 w-4 text-yellow-500 hidden dark:block"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth={2}
-        stroke="currentColor"
+        width={W}
+        height={H}
+        viewBox={`0 0 ${W} ${H}`}
+        style={{ position: "absolute", inset: 0 }}
       >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"
+        {/* Stars (dark mode) */}
+        {[
+          { x: 12, y: 7, r: 1 },
+          { x: 22, y: 5, r: 0.7 },
+          { x: 30, y: 10, r: 1.1 },
+          { x: 17, y: 16, r: 0.8 },
+          { x: 8, y: 20, r: 0.7 },
+          { x: 26, y: 22, r: 0.9 },
+        ].map((s, i) => (
+          <circle
+            key={i}
+            cx={s.x}
+            cy={s.y}
+            r={s.r}
+            fill="#fff"
+            style={{
+              transition: `opacity 0.4s ease ${i * 0.04}s`,
+              opacity: isDark ? 0.9 : 0,
+            }}
+          />
+        ))}
+
+        {/* Clouds (light mode) */}
+        <g
+          style={{
+            transition: "opacity 0.4s ease, transform 0.5s ease",
+            opacity: isDark ? 0 : 1,
+            transform: isDark ? "translateX(8px)" : "translateX(0)",
+          }}
+        >
+          <ellipse cx={44} cy={20} rx={7} ry={4} fill="rgba(255,255,255,0.9)" />
+          <ellipse cx={40} cy={17} rx={5} ry={4} fill="rgba(255,255,255,0.95)" />
+          <ellipse cx={48} cy={17} rx={6} ry={4.5} fill="rgba(255,255,255,0.85)" />
+          <ellipse cx={44} cy={15} rx={4} ry={3} fill="white" />
+        </g>
+
+        {/* Thumb (sun / moon) */}
+        <circle
+          cx={thumbCx}
+          cy={H / 2}
+          r={thumbR}
+          fill={isDark ? "#c8ccd4" : "#ffd43b"}
+          style={{
+            transition:
+              "cx 0.5s cubic-bezier(0.4,0,0.2,1), fill 0.4s ease",
+          }}
         />
-      </svg>
-      {/* Moon icon - shown in light mode */}
-      <svg
-        className="h-4 w-4 text-gray-600 block dark:hidden"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth={2}
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"
+
+        {/* Moon craters */}
+        <circle
+          cx={thumbCx - 2.5}
+          cy={H / 2 - 3}
+          r={2}
+          fill={isDark ? "#a0a5b0" : "transparent"}
+          style={{ transition: "fill 0.3s ease" }}
+        />
+        <circle
+          cx={thumbCx + 3}
+          cy={H / 2 + 2}
+          r={1.6}
+          fill={isDark ? "#a0a5b0" : "transparent"}
+          style={{ transition: "fill 0.3s ease" }}
+        />
+        <circle
+          cx={thumbCx - 1}
+          cy={H / 2 + 4}
+          r={1.2}
+          fill={isDark ? "#a0a5b0" : "transparent"}
+          style={{ transition: "fill 0.3s ease" }}
         />
       </svg>
     </button>
