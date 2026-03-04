@@ -46,23 +46,23 @@ export default async function BrandPage({ params }) {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Breadcrumb */}
-      <nav className="text-sm text-gray-500 mb-6">
-        <Link href="/" className="hover:text-gray-700">Home</Link>
+      <nav className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+        <Link href="/" className="hover:text-gray-700 dark:hover:text-gray-300">Home</Link>
         <span className="mx-2">/</span>
-        <Link href="/brands" className="hover:text-gray-700">Brands</Link>
+        <Link href="/brands" className="hover:text-gray-700 dark:hover:text-gray-300">Brands</Link>
         <span className="mx-2">/</span>
-        <span className="text-gray-900">{brand.name}</span>
+        <span className="text-gray-900 dark:text-gray-100">{brand.name}</span>
       </nav>
 
-      <h1 className="text-3xl font-bold text-gray-900">{brand.name}</h1>
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{brand.name}</h1>
       {brand.description && (
-        <p className="text-gray-600 mt-2 max-w-2xl">{brand.description}</p>
+        <p className="text-gray-600 dark:text-gray-400 mt-2 max-w-2xl">{brand.description}</p>
       )}
 
       {/* Brand Perception Map */}
       {productsWithVotes.length > 0 && (
-        <div className="bg-white rounded-xl border border-gray-200 p-6 mt-8 mb-8">
-          <h2 className="text-lg font-semibold text-gray-900 mb-4">
+        <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 mt-8 mb-8">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">
             {brand.name} Perception Map
           </h2>
           <PerceptionMap products={productsWithVotes} />
@@ -71,7 +71,7 @@ export default async function BrandPage({ params }) {
 
       {/* Products */}
       <div className="mt-8">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">
           Products ({brand.products.length})
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

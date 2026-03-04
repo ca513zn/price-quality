@@ -22,24 +22,24 @@ export default async function HomePage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Hero */}
       <div className="text-center mb-8">
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900">
+        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">
           Price vs Quality Perception Map
         </h1>
-        <p className="mt-2 text-gray-600 max-w-2xl mx-auto">
+        <p className="mt-2 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
           See how products are perceived by real users. Vote on price and quality
           to help place them on the map.
         </p>
       </div>
 
       {/* Perception Map */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6 mb-10">
+      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 mb-10">
         {products.length > 0 ? (
           <PerceptionMap products={products} />
         ) : (
-          <div className="text-center py-20 text-gray-400">
+          <div className="text-center py-20 text-gray-400 dark:text-gray-500">
             <p className="text-lg">No products with votes yet.</p>
             <p className="mt-1">
-              <Link href="/products" className="text-blue-600 underline">
+              <Link href="/products" className="text-blue-600 dark:text-blue-400 underline">
                 Browse products
               </Link>{" "}
               and cast the first vote!
@@ -52,10 +52,10 @@ export default async function HomePage() {
       {products.length > 0 && (
         <div>
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-900">Top Rated Products</h2>
+            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">Top Rated Products</h2>
             <Link
               href="/products"
-              className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+              className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium"
             >
               View all →
             </Link>

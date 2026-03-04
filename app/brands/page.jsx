@@ -18,8 +18,8 @@ export default async function BrandsPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-2">All Brands</h1>
-      <p className="text-gray-600 mb-6">
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">All Brands</h1>
+      <p className="text-gray-600 dark:text-gray-400 mb-6">
         Explore brands and see how their products are perceived.
       </p>
 
@@ -29,24 +29,24 @@ export default async function BrandsPage() {
             <Link
               key={brand.id}
               href={`/brands/${brand.slug}`}
-              className="block bg-white border border-gray-200 rounded-lg p-5 hover:shadow-md transition group"
+              className="block bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-5 hover:shadow-md dark:hover:shadow-gray-900/50 transition group"
             >
-              <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition text-lg">
+              <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition text-lg">
                 {brand.name}
               </h3>
               {brand.description && (
-                <p className="text-sm text-gray-500 mt-1 line-clamp-2">
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
                   {brand.description}
                 </p>
               )}
-              <p className="text-xs text-gray-400 mt-3">
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-3">
                 {brand._count.products} product{brand._count.products !== 1 ? "s" : ""}
               </p>
             </Link>
           ))}
         </div>
       ) : (
-        <p className="text-gray-400 text-center py-12">No brands found.</p>
+        <p className="text-gray-400 dark:text-gray-500 text-center py-12">No brands found.</p>
       )}
     </div>
   );

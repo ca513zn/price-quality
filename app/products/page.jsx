@@ -16,8 +16,8 @@ export default async function ProductsPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-2">All Products</h1>
-      <p className="text-gray-600 mb-6">
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">All Products</h1>
+      <p className="text-gray-600 dark:text-gray-400 mb-6">
         Browse all products and vote on their perceived price and quality.
       </p>
 
@@ -28,7 +28,7 @@ export default async function ProductsPage() {
           ))}
         </div>
       ) : (
-        <p className="text-gray-400 text-center py-12">No products found.</p>
+        <p className="text-gray-400 dark:text-gray-500 text-center py-12">No products found.</p>
       )}
     </div>
   );
