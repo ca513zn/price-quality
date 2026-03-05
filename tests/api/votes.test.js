@@ -1,5 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
+// Mock auth before importing routes
+const mockGetCurrentUser = vi.fn();
+vi.mock("@/lib/auth", () => ({
+  getCurrentUser: (...args) => mockGetCurrentUser(...args),
+}));
+
 // Mock Prisma before importing routes
 vi.mock("@/lib/prisma", () => {
   return {
@@ -8,6 +14,7 @@ vi.mock("@/lib/prisma", () => {
         create: vi.fn(),
         aggregate: vi.fn(),
         findMany: vi.fn(),
+        findUnique: vi.fn(),
       },
       product: {
         findUnique: vi.fn(),
@@ -23,6 +30,8 @@ vi.mock("@/lib/prisma", () => {
 });
 
 import prisma from "@/lib/prisma";
+
+const mockUser = { id: "user1", email: "test@example.com", name: "Test User", role: "USER" };
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -41,8 +50,23 @@ describe("POST /api/votes", () => {
 
   beforeEach(async () => {
     vi.clearAllMocks();
+    // Default: user is authenticated
+    mockGetCurrentUser.mockResolvedValue(mockUser);
+    // Default: no existing vote (no duplicate)
+    prisma.vote.findUnique.mockResolvedValue(null);
     const mod = await import("@/app/api/votes/route");
     POST = mod.POST;
+  });
+
+  it("returns 401 when not authenticated", async () => {
+    mockGetCurrentUser.mockResolvedValue(null);
+
+    const req = createRequest({ productId: "prod1", priceScore: 5, qualityScore: 5 });
+    const res = await POST(req);
+    const data = await res.json();
+
+    expect(res.status).toBe(401);
+    expect(data.error).toContain("logged in");
   });
 
   it("returns 400 when productId is missing", async () => {
@@ -112,7 +136,7 @@ describe("POST /api/votes", () => {
 
   it("returns 201 and creates a vote when input is valid", async () => {
     const mockProduct = { id: "prod1", name: "Test Product" };
-    const mockVote = { id: "vote1", productId: "prod1", priceScore: 7, qualityScore: 8 };
+    const mockVote = { id: "vote1", productId: "prod1", userId: "user1", priceScore: 7, qualityScore: 8 };
 
     prisma.product.findUnique.mockResolvedValue(mockProduct);
     prisma.vote.create.mockResolvedValue(mockVote);

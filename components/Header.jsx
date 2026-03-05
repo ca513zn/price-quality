@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ThemeToggle from "@/components/ThemeToggle";
+import UserMenu from "@/components/UserMenu";
 
 export default function Header() {
   return (
@@ -32,6 +33,7 @@ export default function Header() {
               </Link>
             </nav>
             <ThemeToggle />
+            <UserMenu />
           </div>
         </div>
       </div>

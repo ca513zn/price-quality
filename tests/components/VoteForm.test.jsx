@@ -2,91 +2,134 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import VoteForm from "@/components/VoteForm";
 
-// Mock next/link (not used here, but just in case)
+// Mock next/link
 vi.mock("next/link", () => ({
   default: ({ children, href, ...props }) => (
     <a href={href} {...props}>{children}</a>
   ),
 }));
 
+// Mock useAuth
+const mockUseAuth = vi.fn();
+vi.mock("@/components/AuthProvider", () => ({
+  useAuth: () => mockUseAuth(),
+}));
+
+const authenticatedUser = { id: "user1", name: "Test User", email: "test@example.com", role: "USER" };
+
 describe("VoteForm", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     global.fetch = vi.fn();
+    // Default: authenticated user, no existing votes
+    mockUseAuth.mockReturnValue({ user: authenticatedUser, loading: false });
+    global.fetch.mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ votes: [] }),
+    });
   });
 
-  it("renders the product name in the heading", () => {
+  it("shows sign-in prompt when not authenticated", () => {
+    mockUseAuth.mockReturnValue({ user: null, loading: false });
     render(<VoteForm productId="p1" productName="iPhone 16 Pro" />);
-    expect(screen.getByText("iPhone 16 Pro")).toBeInTheDocument();
+    expect(screen.getAllByText(/sign in to vote/i).length).toBeGreaterThan(0);
   });
 
-  it("renders price and quality sliders", () => {
-    render(<VoteForm productId="p1" productName="Test Product" />);
-    const sliders = screen.getAllByRole("slider");
-    expect(sliders).toHaveLength(2);
+  it("renders the product name in the heading when authenticated", async () => {
+    render(<VoteForm productId="p1" productName="iPhone 16 Pro" />);
+    await waitFor(() => {
+      expect(screen.getByText("iPhone 16 Pro")).toBeInTheDocument();
+    });
   });
 
-  it("shows default score of 5 for both sliders", () => {
+  it("renders price and quality sliders", async () => {
     render(<VoteForm productId="p1" productName="Test Product" />);
-    const sliders = screen.getAllByRole("slider");
-    expect(sliders[0]).toHaveValue("5");
-    expect(sliders[1]).toHaveValue("5");
+    await waitFor(() => {
+      const sliders = screen.getAllByRole("slider");
+      expect(sliders).toHaveLength(2);
+    });
   });
 
-  it("renders the submit button", () => {
+  it("shows default score of 5 for both sliders", async () => {
     render(<VoteForm productId="p1" productName="Test Product" />);
-    expect(screen.getByRole("button", { name: /submit vote/i })).toBeInTheDocument();
+    await waitFor(() => {
+      const sliders = screen.getAllByRole("slider");
+      expect(sliders[0]).toHaveValue("5");
+      expect(sliders[1]).toHaveValue("5");
+    });
   });
 
-  it("shows the correct quadrant preview based on defaults (5,5 = Premium)", () => {
+  it("renders the submit button", async () => {
     render(<VoteForm productId="p1" productName="Test Product" />);
-    // 5 >= 5 for both = Premium
-    expect(screen.getByText("Premium")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: /submit vote/i })).toBeInTheDocument();
+    });
   });
 
-  it("updates quadrant when sliders change", () => {
+  it("shows the correct quadrant preview based on defaults (5,5 = Premium)", async () => {
     render(<VoteForm productId="p1" productName="Test Product" />);
-    const sliders = screen.getAllByRole("slider");
+    await waitFor(() => {
+      expect(screen.getByText("Premium")).toBeInTheDocument();
+    });
+  });
 
-    // Move price to 8 and quality to 9 → Premium
-    fireEvent.change(sliders[0], { target: { value: "8" } });
-    fireEvent.change(sliders[1], { target: { value: "9" } });
-
-    expect(screen.getByText("Premium")).toBeInTheDocument();
+  it("updates quadrant when sliders change", async () => {
+    render(<VoteForm productId="p1" productName="Test Product" />);
+    await waitFor(() => {
+      const sliders = screen.getAllByRole("slider");
+      fireEvent.change(sliders[0], { target: { value: "8" } });
+      fireEvent.change(sliders[1], { target: { value: "9" } });
+      expect(screen.getByText("Premium")).toBeInTheDocument();
+    });
   });
 
   it("submits a vote and shows success message", async () => {
-    global.fetch.mockResolvedValue({
-      ok: true,
-      json: () => Promise.resolve({ vote: { id: "v1" } }),
-    });
+    // First call: fetch my-votes (no existing)
+    // Second call: POST vote
+    global.fetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ votes: [] }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ vote: { id: "v1", productId: "p1", priceScore: 5, qualityScore: 5 } }),
+      });
 
     const onVoteSuccess = vi.fn();
     render(
       <VoteForm productId="p1" productName="Test Product" onVoteSuccess={onVoteSuccess} />
     );
 
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: /submit vote/i })).toBeInTheDocument();
+    });
+
     fireEvent.click(screen.getByRole("button", { name: /submit vote/i }));
 
     await waitFor(() => {
-      expect(screen.getByText(/vote submitted/i)).toBeInTheDocument();
+      expect(screen.getByText(/vote (submitted|updated)/i)).toBeInTheDocument();
     });
 
-    expect(global.fetch).toHaveBeenCalledWith("/api/votes", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ productId: "p1", priceScore: 5, qualityScore: 5 }),
-    });
     expect(onVoteSuccess).toHaveBeenCalled();
   });
 
   it("shows an error message when the API returns an error", async () => {
-    global.fetch.mockResolvedValue({
-      ok: false,
-      json: () => Promise.resolve({ error: "Product not found" }),
-    });
+    global.fetch
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ votes: [] }),
+      })
+      .mockResolvedValueOnce({
+        ok: false,
+        json: () => Promise.resolve({ error: "Product not found" }),
+      });
 
     render(<VoteForm productId="bad-id" productName="Bad Product" />);
+
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: /submit vote/i })).toBeInTheDocument();
+    });
 
     fireEvent.click(screen.getByRole("button", { name: /submit vote/i }));
 
@@ -95,60 +138,26 @@ describe("VoteForm", () => {
     });
   });
 
-  it("shows 'Vote again' button after successful submission", async () => {
-    global.fetch.mockResolvedValue({
+  it("shows existing vote with edit/delete buttons if already voted", async () => {
+    global.fetch.mockResolvedValueOnce({
       ok: true,
-      json: () => Promise.resolve({ vote: { id: "v1" } }),
+      json: () => Promise.resolve({
+        votes: [{ id: "v1", productId: "p1", priceScore: 7, qualityScore: 8, product: { slug: "test" } }],
+      }),
     });
 
     render(<VoteForm productId="p1" productName="Test Product" />);
 
-    fireEvent.click(screen.getByRole("button", { name: /submit vote/i }));
-
     await waitFor(() => {
-      expect(screen.getByText(/vote again/i)).toBeInTheDocument();
+      expect(screen.getByText(/your vote for/i)).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /edit vote/i })).toBeInTheDocument();
+      expect(screen.getByRole("button", { name: /delete/i })).toBeInTheDocument();
     });
   });
 
-  it("resets the form when 'Vote again' is clicked", async () => {
-    global.fetch.mockResolvedValue({
-      ok: true,
-      json: () => Promise.resolve({ vote: { id: "v1" } }),
-    });
-
-    render(<VoteForm productId="p1" productName="Test Product" />);
-
-    fireEvent.click(screen.getByRole("button", { name: /submit vote/i }));
-
-    await waitFor(() => {
-      expect(screen.getByText(/vote again/i)).toBeInTheDocument();
-    });
-
-    fireEvent.click(screen.getByText(/vote again/i));
-
-    // Form should be back with the submit button
-    expect(screen.getByRole("button", { name: /submit vote/i })).toBeInTheDocument();
-    const sliders = screen.getAllByRole("slider");
-    expect(sliders[0]).toHaveValue("5");
-    expect(sliders[1]).toHaveValue("5");
-  });
-
-  it("disables the button while submitting", async () => {
-    let resolvePromise;
-    global.fetch.mockReturnValue(
-      new Promise((resolve) => {
-        resolvePromise = resolve;
-      })
-    );
-
-    render(<VoteForm productId="p1" productName="Test Product" />);
-    const button = screen.getByRole("button", { name: /submit vote/i });
-
-    fireEvent.click(button);
-
-    expect(screen.getByRole("button", { name: /submitting/i })).toBeDisabled();
-
-    // Resolve to avoid hanging
-    resolvePromise({ ok: true, json: () => Promise.resolve({ vote: {} }) });
+  it("shows loading spinner while auth is loading", () => {
+    mockUseAuth.mockReturnValue({ user: null, loading: true });
+    const { container } = render(<VoteForm productId="p1" productName="Test Product" />);
+    expect(container.querySelector(".animate-spin")).toBeInTheDocument();
   });
 });

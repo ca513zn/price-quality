@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
+import bcrypt from "bcryptjs";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -19,6 +20,49 @@ async function main() {
   await prisma.vote.deleteMany();
   await prisma.product.deleteMany();
   await prisma.brand.deleteMany();
+  await prisma.user.deleteMany();
+
+  // Create users
+  const hashedPassword = await bcrypt.hash("password123", 12);
+
+  const admin = await prisma.user.create({
+    data: {
+      name: "Admin User",
+      email: "admin@example.com",
+      password: hashedPassword,
+      role: "ADMIN",
+    },
+  });
+  console.log("👤 Created admin: admin@example.com / password123");
+
+  const users = [];
+  const userNames = [
+    "Alice Johnson",
+    "Bob Smith",
+    "Charlie Brown",
+    "Diana Prince",
+    "Eve Williams",
+    "Frank Miller",
+    "Grace Lee",
+    "Henry Davis",
+    "Ivy Chen",
+    "Jack Wilson",
+  ];
+
+  for (const name of userNames) {
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email: `${name.toLowerCase().replace(/\s+/g, ".")}@example.com`,
+        password: hashedPassword,
+      },
+    });
+    users.push(user);
+  }
+  console.log(`👥 Created ${users.length} regular users (password: password123)`);
+
+  // Also add admin to the users pool so they can vote too
+  users.push(admin);
 
   // Create brands
   const apple = await prisma.brand.create({
@@ -104,18 +148,21 @@ async function main() {
     "Rolex Datejust": [9, 10, 7, 9],          // Overpriced edge / Premium
   };
 
-  // Generate votes
+  // Generate votes — each user votes once per product (at most)
   for (const product of createdProducts) {
     const pattern = votePatterns[product.name];
     if (!pattern) continue;
 
     const [minP, maxP, minQ, maxQ] = pattern;
-    const numVotes = 15 + Math.floor(Math.random() * 20); // 15-34 votes per product
+    // Shuffle users and take a random subset (8-11 users per product)
+    const shuffled = [...users].sort(() => Math.random() - 0.5);
+    const numVotes = 8 + Math.floor(Math.random() * 4); // 8-11
+    const voters = shuffled.slice(0, Math.min(numVotes, shuffled.length));
 
     let totalPrice = 0;
     let totalQuality = 0;
 
-    for (let i = 0; i < numVotes; i++) {
+    for (const voter of voters) {
       const priceScore = Math.floor(Math.random() * (maxP - minP + 1)) + minP;
       const qualityScore = Math.floor(Math.random() * (maxQ - minQ + 1)) + minQ;
       totalPrice += priceScore;
@@ -124,6 +171,7 @@ async function main() {
       await prisma.vote.create({
         data: {
           productId: product.id,
+          userId: voter.id,
           priceScore,
           qualityScore,
         },
@@ -134,9 +182,9 @@ async function main() {
     await prisma.product.update({
       where: { id: product.id },
       data: {
-        avgPriceScore: parseFloat((totalPrice / numVotes).toFixed(2)),
-        avgQualityScore: parseFloat((totalQuality / numVotes).toFixed(2)),
-        totalVotes: numVotes,
+        avgPriceScore: parseFloat((totalPrice / voters.length).toFixed(2)),
+        avgQualityScore: parseFloat((totalQuality / voters.length).toFixed(2)),
+        totalVotes: voters.length,
       },
     });
   }
