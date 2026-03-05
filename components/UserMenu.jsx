@@ -78,6 +78,22 @@ export default function UserMenu() {
             My Votes
           </Link>
 
+          <Link
+            href="/my-submissions"
+            onClick={() => setOpen(false)}
+            className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+          >
+            My Submissions
+          </Link>
+
+          <Link
+            href="/submit-brand"
+            onClick={() => setOpen(false)}
+            className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+          >
+            Submit a Brand
+          </Link>
+
           {user.role === "ADMIN" && (
             <Link
               href="/admin"

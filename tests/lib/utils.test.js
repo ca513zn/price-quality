@@ -4,6 +4,7 @@ import {
   getQuadrant,
   getQuadrantColor,
   computeAggregatedScores,
+  normalizeBrandName,
 } from "@/lib/utils";
 
 // ─── slugify ────────────────────────────────────────────────────────────────
@@ -219,5 +220,35 @@ describe("computeAggregatedScores", () => {
     const result = computeAggregatedScores(votes);
     expect(result.avgPriceScore).toBe(10);
     expect(result.avgQualityScore).toBe(10);
+  });
+});
+
+// ─── normalizeBrandName ─────────────────────────────────────────────────────
+
+describe("normalizeBrandName", () => {
+  it("lowercases and strips non-alphanumeric characters", () => {
+    expect(normalizeBrandName("Nike")).toBe("nike");
+  });
+
+  it("strips diacritics from accented characters", () => {
+    expect(normalizeBrandName("Hermès")).toBe("hermes");
+    expect(normalizeBrandName("Nestlé")).toBe("nestle");
+    expect(normalizeBrandName("L'Oréal")).toBe("loreal");
+  });
+
+  it("strips common corporate suffixes", () => {
+    expect(normalizeBrandName("Apple Inc")).toBe("apple");
+    expect(normalizeBrandName("Samsung Corp")).toBe("samsung");
+    expect(normalizeBrandName("Bosch GmbH")).toBe("bosch");
+  });
+
+  it("removes punctuation and spaces", () => {
+    expect(normalizeBrandName("Bang & Olufsen")).toBe("bangolufsen");
+    expect(normalizeBrandName("De'Longhi")).toBe("delonghi");
+  });
+
+  it("normalizes to same result regardless of formatting", () => {
+    expect(normalizeBrandName("NIKE")).toBe(normalizeBrandName("nike"));
+    expect(normalizeBrandName("  Apple  ")).toBe(normalizeBrandName("Apple"));
   });
 });

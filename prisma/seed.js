@@ -397,6 +397,83 @@ async function seedVotes(productsWithPatterns, userIds) {
   console.log(`   ✅ ${updated} product scores updated`);
 }
 
+async function seedSubmissions(userIds) {
+  console.log("\n📝 Seeding sample brand submissions...");
+
+  if (!userIds || userIds.length === 0) {
+    const allUsers = await prisma.user.findMany({ select: { id: true } });
+    userIds = allUsers.map((u) => u.id);
+  }
+
+  if (userIds.length < 2) {
+    console.log("   ⚠️  Not enough users for submissions — skipping");
+    return;
+  }
+
+  // Use regular users (skip admin at index 0)
+  const regularUsers = userIds.slice(1);
+
+  const sampleSubmissions = [
+    { name: "Bowers & Wilkins", description: "British premium audio equipment manufacturer.", categories: ["Audio"], status: "PENDING" },
+    { name: "Sonnet", description: "American company specializing in Thunderbolt accessories.", categories: ["Electronics"], status: "PENDING" },
+    { name: "Rode", description: "Australian manufacturer of microphones and audio equipment.", categories: ["Audio", "Musical Instruments"], status: "PENDING" },
+    { name: "Peak Design", description: "San Francisco-based company making camera bags and phone cases.", categories: ["Cameras & Photography", "Travel & Luggage"], status: "PENDING" },
+    { name: "Rivian", description: "American electric vehicle manufacturer.", categories: ["Automotive"], status: "IN_REVIEW" },
+    { name: "Samsong", description: "Electronics company.", categories: ["Electronics"], status: "IN_REVIEW", duplicateOfSlug: "samsung" },
+    { name: "Appel", description: "Tech company.", categories: ["Electronics"], status: "REJECTED", rejectionReason: "Duplicate of existing brand" },
+    { name: "Framework", description: "American company making modular, repairable laptops.", categories: ["Laptops & Computers", "Electronics"], status: "APPROVED" },
+  ];
+
+  let created = 0;
+  for (const sub of sampleSubmissions) {
+    const submitterId = regularUsers[Math.floor(Math.random() * regularUsers.length)];
+
+    // Check if already exists (by slug)
+    const subSlug = slugify(sub.name);
+    const existing = await prisma.brandSubmission.findFirst({ where: { slug: subSlug } });
+    if (existing) continue;
+
+    // For approved submissions, create the brand first
+    let promotedBrandId = null;
+    if (sub.status === "APPROVED") {
+      const existingBrand = await prisma.brand.findUnique({ where: { slug: subSlug } });
+      if (!existingBrand) {
+        const brand = await prisma.brand.create({
+          data: { name: sub.name, slug: subSlug, description: sub.description },
+        });
+        promotedBrandId = brand.id;
+      } else {
+        promotedBrandId = existingBrand.id;
+      }
+    }
+
+    // For duplicates, find the target brand
+    let duplicateOfId = null;
+    if (sub.duplicateOfSlug) {
+      const target = await prisma.brand.findUnique({ where: { slug: sub.duplicateOfSlug } });
+      if (target) duplicateOfId = target.id;
+    }
+
+    await prisma.brandSubmission.create({
+      data: {
+        name: sub.name,
+        slug: subSlug,
+        description: sub.description,
+        categories: sub.categories || [],
+        status: sub.status,
+        submitterId,
+        rejectionReason: sub.rejectionReason || null,
+        duplicateOfId,
+        promotedBrandId,
+        reviewedAt: sub.status !== "PENDING" && sub.status !== "IN_REVIEW" ? new Date() : null,
+      },
+    });
+    created++;
+  }
+
+  console.log(`   ✅ ${created} sample submissions created`);
+}
+
 async function cleanDatabase() {
   console.log("\n🧹 Cleaning database (destructive)...");
   const t0 = performance.now();
@@ -406,6 +483,8 @@ async function cleanDatabase() {
   console.log("   🗑️  Votes deleted");
   await prisma.product.deleteMany();
   console.log("   🗑️  Products deleted");
+  await prisma.brandSubmission.deleteMany();
+  console.log("   🗑️  Brand submissions deleted");
   await prisma.brand.deleteMany();
   console.log("   🗑️  Brands deleted");
   await prisma.category.deleteMany();
@@ -462,6 +541,10 @@ async function main() {
     await seedVotes(productsWithPatterns, userIds);
   }
 
+  if (flags.all) {
+    await seedSubmissions(userIds);
+  }
+
   // Summary
   const elapsed = ((performance.now() - t0) / 1000).toFixed(2);
   console.log("\n" + "─".repeat(50));
@@ -473,13 +556,15 @@ async function main() {
       prisma.product.count(),
       prisma.user.count(),
       prisma.vote.count(),
+      prisma.brandSubmission.count(),
     ]);
     console.log(`📊 Database totals:`);
-    console.log(`   Categories: ${counts[0]}`);
-    console.log(`   Brands:     ${counts[1]}`);
-    console.log(`   Products:   ${counts[2]}`);
-    console.log(`   Users:      ${counts[3]}`);
-    console.log(`   Votes:      ${counts[4]}`);
+    console.log(`   Categories:   ${counts[0]}`);
+    console.log(`   Brands:       ${counts[1]}`);
+    console.log(`   Products:     ${counts[2]}`);
+    console.log(`   Users:        ${counts[3]}`);
+    console.log(`   Votes:        ${counts[4]}`);
+    console.log(`   Submissions:  ${counts[5]}`);
   }
 
   console.log(`\n✅ Seed complete in ${elapsed}s`);

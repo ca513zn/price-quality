@@ -11,15 +11,25 @@ enum Role {
   ADMIN
 }
 
+enum SubmissionStatus {
+  PENDING
+  IN_REVIEW
+  APPROVED
+  REJECTED
+  DUPLICATE
+}
+
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String
-  password  String
-  role      Role     @default(USER)
-  votes     Vote[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id               String            @id @default(cuid())
+  email            String            @unique
+  name             String
+  password         String
+  role             Role              @default(USER)
+  votes            Vote[]
+  submissions      BrandSubmission[] @relation("SubmittedBy")
+  reviewedSubmissions BrandSubmission[] @relation("ReviewedBy")
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
 }
 
 model Category {
@@ -79,4 +89,29 @@ model Vote {
   @@unique([productId, userId])
   @@index([productId])
   @@index([userId])
+}
+
+model BrandSubmission {
+  id              String           @id @default(cuid())
+  name            String
+  slug            String
+  description     String?
+  websiteUrl      String?
+  categories      String[]         // Category names proposed by submitter
+  status          SubmissionStatus @default(PENDING)
+  submitter       User             @relation("SubmittedBy", fields: [submitterId], references: [id])
+  submitterId     String
+  reviewer        User?            @relation("ReviewedBy", fields: [reviewerId], references: [id])
+  reviewerId      String?
+  reviewNotes     String?
+  rejectionReason String?
+  promotedBrandId String?          // Links to Brand.id on approval
+  duplicateOfId   String?          // Links to existing Brand.id if duplicate
+  reviewedAt      DateTime?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([status])
+  @@index([submitterId])
+  @@index([slug])
 }

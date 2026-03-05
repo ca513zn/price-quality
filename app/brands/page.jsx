@@ -187,9 +187,19 @@ export default function BrandsPage() {
           ))}
         </div>
       ) : (
-        <p className="text-gray-400 dark:text-gray-500 text-center py-12">
-          {search ? `No brands matching "${search}".` : "No brands found."}
-        </p>
+        <div className="text-center py-12">
+          <p className="text-gray-400 dark:text-gray-500 mb-4">
+            {search ? `No brands matching "${search}".` : "No brands found."}
+          </p>
+          {search && (
+            <Link
+              href={`/submit-brand`}
+              className="inline-block text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              Can&apos;t find &quot;{search}&quot;? Submit it →
+            </Link>
+          )}
+        </div>
       )}
 
       {/* Edit Modal */}
