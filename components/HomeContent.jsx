@@ -6,6 +6,7 @@ import ProductCard from "@/components/ProductCard";
 import Link from "next/link";
 
 const MAX_DOTS_OVERVIEW = 30;
+const MAX_DOTS_CATEGORY = 5;
 
 export default function HomeContent({ products, categories }) {
   const [selectedCategory, setSelectedCategory] = useState(null); // null = overview
@@ -15,7 +16,10 @@ export default function HomeContent({ products, categories }) {
       // Overview: show top products by votes (capped for readability)
       return products.slice(0, MAX_DOTS_OVERVIEW);
     }
-    return products.filter((p) => p.categoryIds.includes(selectedCategory));
+    // Category view: top 5 most-voted products in that category
+    return products
+      .filter((p) => p.categoryIds.includes(selectedCategory))
+      .slice(0, MAX_DOTS_CATEGORY);
   }, [products, selectedCategory]);
 
   const selectedCategoryName = selectedCategory
@@ -23,7 +27,7 @@ export default function HomeContent({ products, categories }) {
     : null;
 
   const mapLabel = selectedCategoryName
-    ? `${selectedCategoryName} — ${filteredProducts.length} products`
+    ? `Top ${filteredProducts.length} most-voted in ${selectedCategoryName}`
     : `Top ${filteredProducts.length} most-voted products`;
 
   return (
