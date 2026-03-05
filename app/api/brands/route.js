@@ -6,6 +6,7 @@ export async function GET() {
     const brands = await prisma.brand.findMany({
       include: {
         _count: { select: { products: true } },
+        categories: { select: { id: true, name: true, slug: true } },
       },
       orderBy: { name: "asc" },
     });

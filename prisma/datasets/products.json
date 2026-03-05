@@ -1,0 +1,373 @@
+[
+  { "name": "iPhone 16 Pro", "brand": "Apple", "description": "Apple's flagship smartphone with A18 Pro chip.", "votePattern": [7, 10, 7, 10] },
+  { "name": "iPhone 16", "brand": "Apple", "description": "Apple's mainstream smartphone.", "votePattern": [6, 8, 7, 9] },
+  { "name": "iPhone SE", "brand": "Apple", "description": "Apple's budget-friendly smartphone.", "votePattern": [4, 6, 5, 7] },
+  { "name": "MacBook Pro M4", "brand": "Apple", "description": "Professional laptop with Apple silicon.", "votePattern": [8, 10, 8, 10] },
+  { "name": "MacBook Air M3", "brand": "Apple", "description": "Ultra-thin laptop with all-day battery.", "votePattern": [6, 8, 7, 9] },
+  { "name": "iPad Pro M4", "brand": "Apple", "description": "Professional tablet with OLED display.", "votePattern": [7, 9, 8, 10] },
+  { "name": "Apple Watch Ultra 2", "brand": "Apple", "description": "Rugged smartwatch for extreme sports.", "votePattern": [8, 10, 8, 10] },
+  { "name": "Apple Watch SE", "brand": "Apple", "description": "Affordable Apple smartwatch.", "votePattern": [4, 6, 5, 7] },
+  { "name": "AirPods Pro 2", "brand": "Apple", "description": "Premium wireless earbuds with ANC.", "votePattern": [6, 8, 7, 9] },
+  { "name": "AirPods Max", "brand": "Apple", "description": "Over-ear premium headphones.", "votePattern": [8, 10, 7, 9] },
+
+  { "name": "Galaxy S25 Ultra", "brand": "Samsung", "description": "Samsung's premium flagship phone.", "votePattern": [7, 9, 7, 9] },
+  { "name": "Galaxy S25", "brand": "Samsung", "description": "Samsung's flagship phone.", "votePattern": [6, 8, 6, 8] },
+  { "name": "Galaxy A15", "brand": "Samsung", "description": "Samsung's budget smartphone.", "votePattern": [2, 4, 3, 5] },
+  { "name": "Galaxy Z Fold 6", "brand": "Samsung", "description": "Premium foldable smartphone.", "votePattern": [8, 10, 6, 8] },
+  { "name": "Galaxy Tab S10", "brand": "Samsung", "description": "Samsung's premium Android tablet.", "votePattern": [6, 8, 7, 9] },
+  { "name": "Samsung Neo QLED TV", "brand": "Samsung", "description": "Premium 4K QLED television.", "votePattern": [7, 9, 7, 9] },
+  { "name": "Samsung Bespoke Fridge", "brand": "Samsung", "description": "Customizable smart refrigerator.", "votePattern": [7, 9, 6, 8] },
+  { "name": "Galaxy Buds 3 Pro", "brand": "Samsung", "description": "Premium wireless earbuds.", "votePattern": [5, 7, 6, 8] },
+  { "name": "Galaxy Watch 7", "brand": "Samsung", "description": "Samsung's latest smartwatch.", "votePattern": [5, 7, 6, 8] },
+
+  { "name": "PlayStation 5", "brand": "Sony", "description": "Next-gen gaming console.", "votePattern": [5, 7, 7, 9] },
+  { "name": "PlayStation 5 Pro", "brand": "Sony", "description": "Enhanced gaming console with better GPU.", "votePattern": [7, 9, 7, 9] },
+  { "name": "Sony WH-1000XM5", "brand": "Sony", "description": "Premium noise-cancelling headphones.", "votePattern": [6, 8, 8, 10] },
+  { "name": "Sony WF-1000XM5", "brand": "Sony", "description": "Premium noise-cancelling earbuds.", "votePattern": [6, 8, 7, 9] },
+  { "name": "Sony Alpha A7 IV", "brand": "Sony", "description": "Full-frame mirrorless camera.", "votePattern": [7, 9, 8, 10] },
+  { "name": "Sony A7R V", "brand": "Sony", "description": "High-resolution full-frame mirrorless camera.", "votePattern": [8, 10, 8, 10] },
+  { "name": "Sony Bravia XR TV", "brand": "Sony", "description": "Premium OLED television.", "votePattern": [7, 9, 8, 10] },
+  { "name": "PlayStation VR2", "brand": "Sony", "description": "VR headset for PlayStation 5.", "votePattern": [5, 7, 6, 8] },
+  { "name": "Sony SRS-XB100", "brand": "Sony", "description": "Portable Bluetooth speaker.", "votePattern": [2, 4, 5, 7] },
+
+  { "name": "KALLAX Shelf", "brand": "IKEA", "description": "Versatile storage shelf unit.", "votePattern": [2, 4, 4, 6] },
+  { "name": "MALM Bed Frame", "brand": "IKEA", "description": "Simple, clean-design bed frame.", "votePattern": [3, 5, 4, 7] },
+  { "name": "BILLY Bookcase", "brand": "IKEA", "description": "Classic adjustable bookcase.", "votePattern": [1, 3, 4, 6] },
+  { "name": "POÄNG Chair", "brand": "IKEA", "description": "Iconic bent-wood armchair.", "votePattern": [2, 4, 5, 7] },
+  { "name": "HEMNES Dresser", "brand": "IKEA", "description": "Traditional solid wood dresser.", "votePattern": [3, 5, 5, 7] },
+  { "name": "ALEX Desk", "brand": "IKEA", "description": "Compact desk with drawers.", "votePattern": [2, 4, 4, 6] },
+  { "name": "MARKUS Office Chair", "brand": "IKEA", "description": "Ergonomic office chair.", "votePattern": [3, 5, 5, 7] },
+  { "name": "LACK Side Table", "brand": "IKEA", "description": "Minimalist lightweight side table.", "votePattern": [1, 2, 3, 5] },
+
+  { "name": "Rolex Submariner", "brand": "Rolex", "description": "Iconic luxury dive watch.", "votePattern": [9, 10, 8, 10] },
+  { "name": "Rolex Datejust", "brand": "Rolex", "description": "Classic luxury dress watch.", "votePattern": [9, 10, 7, 9] },
+  { "name": "Rolex Daytona", "brand": "Rolex", "description": "Legendary chronograph watch.", "votePattern": [9, 10, 9, 10] },
+  { "name": "Rolex GMT-Master II", "brand": "Rolex", "description": "Dual-timezone pilot watch.", "votePattern": [9, 10, 8, 10] },
+
+  { "name": "Nike Air Max 90", "brand": "Nike", "description": "Iconic lifestyle sneaker.", "votePattern": [5, 7, 6, 8] },
+  { "name": "Nike Air Force 1", "brand": "Nike", "description": "Classic basketball-inspired sneaker.", "votePattern": [4, 6, 6, 8] },
+  { "name": "Nike Pegasus 41", "brand": "Nike", "description": "Versatile running shoe.", "votePattern": [5, 7, 7, 9] },
+  { "name": "Nike Dunk Low", "brand": "Nike", "description": "Retro basketball shoe turned streetwear icon.", "votePattern": [5, 7, 5, 7] },
+  { "name": "Nike Vaporfly 3", "brand": "Nike", "description": "Elite marathon racing shoe.", "votePattern": [8, 10, 8, 10] },
+  { "name": "Nike Dri-FIT Training Tee", "brand": "Nike", "description": "Performance workout t-shirt.", "votePattern": [3, 5, 5, 7] },
+
+  { "name": "Adidas Ultraboost", "brand": "Adidas", "description": "Premium running shoe with Boost cushioning.", "votePattern": [6, 8, 7, 9] },
+  { "name": "Adidas Samba", "brand": "Adidas", "description": "Classic indoor soccer shoe turned lifestyle icon.", "votePattern": [4, 6, 6, 8] },
+  { "name": "Adidas Stan Smith", "brand": "Adidas", "description": "Iconic minimalist tennis shoe.", "votePattern": [4, 6, 6, 8] },
+  { "name": "Adidas NMD R1", "brand": "Adidas", "description": "Modern lifestyle sneaker.", "votePattern": [5, 7, 5, 7] },
+
+  { "name": "Pixel 9 Pro", "brand": "Google", "description": "Google's premium AI-powered smartphone.", "votePattern": [6, 8, 7, 9] },
+  { "name": "Pixel 9", "brand": "Google", "description": "Google's flagship smartphone.", "votePattern": [5, 7, 7, 9] },
+  { "name": "Pixel Watch 3", "brand": "Google", "description": "Google's latest smartwatch.", "votePattern": [5, 7, 5, 7] },
+  { "name": "Google Nest Hub Max", "brand": "Google", "description": "Smart display with camera.", "votePattern": [5, 7, 6, 8] },
+  { "name": "Chromecast with Google TV", "brand": "Google", "description": "Streaming media player.", "votePattern": [2, 4, 5, 7] },
+
+  { "name": "Xbox Series X", "brand": "Microsoft", "description": "Microsoft's flagship gaming console.", "votePattern": [5, 7, 7, 9] },
+  { "name": "Xbox Series S", "brand": "Microsoft", "description": "Budget-friendly next-gen gaming console.", "votePattern": [3, 5, 5, 7] },
+  { "name": "Surface Pro 11", "brand": "Microsoft", "description": "2-in-1 laptop tablet.", "votePattern": [7, 9, 6, 8] },
+  { "name": "Surface Laptop 7", "brand": "Microsoft", "description": "Thin and light Windows laptop.", "votePattern": [6, 8, 6, 8] },
+  { "name": "Xbox Elite Controller Series 2", "brand": "Microsoft", "description": "Premium gaming controller.", "votePattern": [6, 8, 7, 9] },
+
+  { "name": "Kindle Paperwhite", "brand": "Amazon", "description": "Premium e-reader with warm light.", "votePattern": [4, 6, 7, 9] },
+  { "name": "Echo Dot 5th Gen", "brand": "Amazon", "description": "Compact smart speaker with Alexa.", "votePattern": [2, 4, 5, 7] },
+  { "name": "Fire TV Stick 4K", "brand": "Amazon", "description": "Streaming media player.", "votePattern": [2, 4, 5, 7] },
+  { "name": "Ring Video Doorbell", "brand": "Amazon", "description": "Smart doorbell with camera.", "votePattern": [4, 6, 5, 7] },
+
+  { "name": "Tesla Model 3", "brand": "Tesla", "description": "Affordable electric sedan.", "votePattern": [6, 8, 6, 8] },
+  { "name": "Tesla Model Y", "brand": "Tesla", "description": "Electric compact SUV.", "votePattern": [6, 8, 6, 8] },
+  { "name": "Tesla Model S", "brand": "Tesla", "description": "Premium electric sedan.", "votePattern": [8, 10, 7, 9] },
+  { "name": "Tesla Cybertruck", "brand": "Tesla", "description": "Electric pickup truck.", "votePattern": [7, 9, 4, 7] },
+
+  { "name": "BMW 3 Series", "brand": "BMW", "description": "Iconic luxury sports sedan.", "votePattern": [7, 9, 7, 9] },
+  { "name": "BMW X5", "brand": "BMW", "description": "Luxury midsize SUV.", "votePattern": [8, 10, 7, 9] },
+  { "name": "BMW iX", "brand": "BMW", "description": "Luxury electric SUV.", "votePattern": [8, 10, 6, 8] },
+  { "name": "BMW M4", "brand": "BMW", "description": "High-performance sports coupe.", "votePattern": [8, 10, 8, 10] },
+
+  { "name": "Mercedes C-Class", "brand": "Mercedes-Benz", "description": "Luxury compact sedan.", "votePattern": [7, 9, 7, 9] },
+  { "name": "Mercedes E-Class", "brand": "Mercedes-Benz", "description": "Luxury executive sedan.", "votePattern": [8, 10, 8, 10] },
+  { "name": "Mercedes GLE", "brand": "Mercedes-Benz", "description": "Luxury midsize SUV.", "votePattern": [8, 10, 7, 9] },
+  { "name": "Mercedes EQS", "brand": "Mercedes-Benz", "description": "Luxury electric flagship sedan.", "votePattern": [9, 10, 7, 9] },
+
+  { "name": "Toyota Camry", "brand": "Toyota", "description": "Best-selling midsize sedan.", "votePattern": [4, 6, 7, 9] },
+  { "name": "Toyota RAV4", "brand": "Toyota", "description": "Popular compact SUV.", "votePattern": [4, 6, 7, 9] },
+  { "name": "Toyota Corolla", "brand": "Toyota", "description": "World's best-selling car.", "votePattern": [3, 5, 7, 9] },
+  { "name": "Toyota Land Cruiser", "brand": "Toyota", "description": "Legendary off-road SUV.", "votePattern": [7, 9, 8, 10] },
+
+  { "name": "Honda Civic", "brand": "Honda", "description": "Popular compact car.", "votePattern": [4, 6, 7, 9] },
+  { "name": "Honda CR-V", "brand": "Honda", "description": "Best-selling compact SUV.", "votePattern": [4, 6, 7, 9] },
+  { "name": "Honda Accord", "brand": "Honda", "description": "Midsize sedan with refined ride.", "votePattern": [5, 7, 7, 9] },
+
+  { "name": "LG C4 OLED TV", "brand": "LG", "description": "Premium OLED television.", "votePattern": [6, 8, 8, 10] },
+  { "name": "LG WashTower", "brand": "LG", "description": "Combined washer and dryer unit.", "votePattern": [6, 8, 6, 8] },
+  { "name": "LG Gram 17", "brand": "LG", "description": "Ultra-lightweight 17-inch laptop.", "votePattern": [6, 8, 6, 8] },
+  { "name": "LG InstaView Fridge", "brand": "LG", "description": "Smart refrigerator with see-through door.", "votePattern": [7, 9, 6, 8] },
+
+  { "name": "Bose QuietComfort Ultra", "brand": "Bose", "description": "Premium noise-cancelling headphones.", "votePattern": [7, 9, 8, 10] },
+  { "name": "Bose SoundLink Flex", "brand": "Bose", "description": "Portable Bluetooth speaker.", "votePattern": [5, 7, 7, 9] },
+  { "name": "Bose QuietComfort Earbuds II", "brand": "Bose", "description": "Noise-cancelling true wireless earbuds.", "votePattern": [6, 8, 7, 9] },
+  { "name": "Bose Smart Soundbar 900", "brand": "Bose", "description": "Premium Dolby Atmos soundbar.", "votePattern": [7, 9, 7, 9] },
+
+  { "name": "JBL Charge 5", "brand": "JBL", "description": "Portable waterproof Bluetooth speaker.", "votePattern": [4, 6, 6, 8] },
+  { "name": "JBL Flip 6", "brand": "JBL", "description": "Compact portable Bluetooth speaker.", "votePattern": [3, 5, 6, 8] },
+  { "name": "JBL Tour One M2", "brand": "JBL", "description": "Over-ear noise-cancelling headphones.", "votePattern": [5, 7, 6, 8] },
+  { "name": "JBL PartyBox 310", "brand": "JBL", "description": "Portable party speaker with lights.", "votePattern": [5, 7, 6, 8] },
+
+  { "name": "Sennheiser Momentum 4", "brand": "Sennheiser", "description": "Premium wireless headphones.", "votePattern": [6, 8, 8, 10] },
+  { "name": "Sennheiser HD 660S2", "brand": "Sennheiser", "description": "Open-back audiophile headphones.", "votePattern": [6, 8, 8, 10] },
+  { "name": "Sennheiser IE 600", "brand": "Sennheiser", "description": "Audiophile in-ear monitors.", "votePattern": [7, 9, 8, 10] },
+
+  { "name": "Canon EOS R5 Mark II", "brand": "Canon", "description": "Professional full-frame mirrorless camera.", "votePattern": [8, 10, 8, 10] },
+  { "name": "Canon EOS R6 Mark II", "brand": "Canon", "description": "Versatile full-frame mirrorless camera.", "votePattern": [6, 8, 7, 9] },
+  { "name": "Canon EOS R100", "brand": "Canon", "description": "Entry-level mirrorless camera.", "votePattern": [3, 5, 4, 6] },
+  { "name": "Canon RF 50mm f/1.2L", "brand": "Canon", "description": "Professional portrait lens.", "votePattern": [8, 10, 9, 10] },
+
+  { "name": "Nikon Z8", "brand": "Nikon", "description": "Professional full-frame mirrorless camera.", "votePattern": [7, 9, 8, 10] },
+  { "name": "Nikon Z6 III", "brand": "Nikon", "description": "Versatile full-frame mirrorless camera.", "votePattern": [6, 8, 7, 9] },
+  { "name": "Nikon Z50 II", "brand": "Nikon", "description": "Compact APS-C mirrorless camera.", "votePattern": [4, 6, 6, 8] },
+
+  { "name": "GoPro HERO13", "brand": "GoPro", "description": "Premium action camera.", "votePattern": [5, 7, 7, 9] },
+  { "name": "GoPro HERO", "brand": "GoPro", "description": "Entry-level action camera.", "votePattern": [3, 5, 5, 7] },
+
+  { "name": "Nintendo Switch 2", "brand": "Nintendo", "description": "Next-gen hybrid gaming console.", "votePattern": [5, 7, 7, 9] },
+  { "name": "Nintendo Switch OLED", "brand": "Nintendo", "description": "Hybrid gaming console with OLED screen.", "votePattern": [4, 6, 7, 9] },
+  { "name": "Nintendo Switch Lite", "brand": "Nintendo", "description": "Handheld-only gaming device.", "votePattern": [2, 4, 5, 7] },
+
+  { "name": "Dell XPS 14", "brand": "Dell", "description": "Premium ultrabook.", "votePattern": [7, 9, 7, 9] },
+  { "name": "Dell Inspiron 16", "brand": "Dell", "description": "Budget-friendly everyday laptop.", "votePattern": [3, 5, 4, 6] },
+  { "name": "Dell UltraSharp U2724D", "brand": "Dell", "description": "Professional 27-inch monitor.", "votePattern": [5, 7, 7, 9] },
+  { "name": "Alienware m18 R2", "brand": "Dell", "description": "Premium gaming laptop.", "votePattern": [8, 10, 7, 9] },
+
+  { "name": "HP Spectre x360", "brand": "HP", "description": "Premium 2-in-1 convertible laptop.", "votePattern": [7, 9, 6, 8] },
+  { "name": "HP Pavilion 15", "brand": "HP", "description": "Mainstream everyday laptop.", "votePattern": [3, 5, 4, 6] },
+  { "name": "HP Envy 16", "brand": "HP", "description": "Creator-focused laptop.", "votePattern": [5, 7, 6, 8] },
+  { "name": "HP OMEN 16", "brand": "HP", "description": "Gaming laptop.", "votePattern": [6, 8, 6, 8] },
+
+  { "name": "Lenovo ThinkPad X1 Carbon", "brand": "Lenovo", "description": "Premium business ultrabook.", "votePattern": [7, 9, 8, 10] },
+  { "name": "Lenovo IdeaPad Slim 5", "brand": "Lenovo", "description": "Affordable everyday laptop.", "votePattern": [3, 5, 5, 7] },
+  { "name": "Lenovo Legion Pro 7i", "brand": "Lenovo", "description": "High-end gaming laptop.", "votePattern": [7, 9, 7, 9] },
+  { "name": "Lenovo Yoga 9i", "brand": "Lenovo", "description": "Premium convertible laptop.", "votePattern": [6, 8, 7, 9] },
+
+  { "name": "ASUS ROG Strix G16", "brand": "ASUS", "description": "Gaming laptop with high refresh display.", "votePattern": [6, 8, 7, 9] },
+  { "name": "ASUS ZenBook 14", "brand": "ASUS", "description": "Ultra-thin productivity laptop.", "votePattern": [5, 7, 6, 8] },
+  { "name": "ASUS ProArt Monitor", "brand": "ASUS", "description": "Color-accurate professional monitor.", "votePattern": [6, 8, 8, 10] },
+
+  { "name": "Dyson V15 Detect", "brand": "Dyson", "description": "Premium cordless vacuum with laser.", "votePattern": [8, 10, 8, 10] },
+  { "name": "Dyson Airwrap", "brand": "Dyson", "description": "Multi-styler hair tool.", "votePattern": [8, 10, 7, 9] },
+  { "name": "Dyson Supersonic", "brand": "Dyson", "description": "Premium hair dryer.", "votePattern": [8, 10, 7, 9] },
+  { "name": "Dyson Pure Cool", "brand": "Dyson", "description": "Air purifier and fan.", "votePattern": [7, 9, 6, 8] },
+
+  { "name": "Philips Hue Starter Kit", "brand": "Philips", "description": "Smart lighting system.", "votePattern": [5, 7, 6, 8] },
+  { "name": "Philips OLED TV", "brand": "Philips", "description": "Ambilight OLED television.", "votePattern": [6, 8, 7, 9] },
+  { "name": "Philips Sonicare 9900", "brand": "Philips", "description": "Premium electric toothbrush.", "votePattern": [6, 8, 7, 9] },
+  { "name": "Philips OneBlade", "brand": "Philips", "description": "Hybrid electric trimmer and shaver.", "votePattern": [2, 4, 5, 7] },
+
+  { "name": "KitchenAid Artisan Stand Mixer", "brand": "KitchenAid", "description": "Iconic countertop stand mixer.", "votePattern": [6, 8, 8, 10] },
+  { "name": "KitchenAid Hand Mixer", "brand": "KitchenAid", "description": "Compact hand mixer.", "votePattern": [3, 5, 6, 8] },
+
+  { "name": "Bosch 800 Series Dishwasher", "brand": "Bosch", "description": "Ultra-quiet premium dishwasher.", "votePattern": [7, 9, 8, 10] },
+  { "name": "Bosch Impact Driver", "brand": "Bosch", "description": "Professional impact driver.", "votePattern": [4, 6, 7, 9] },
+
+  { "name": "De'Longhi Magnifica Evo", "brand": "De'Longhi", "description": "Automatic bean-to-cup espresso machine.", "votePattern": [6, 8, 7, 9] },
+  { "name": "De'Longhi Stilosa", "brand": "De'Longhi", "description": "Entry-level espresso machine.", "votePattern": [3, 5, 4, 6] },
+
+  { "name": "Breville Barista Express", "brand": "Breville", "description": "Semi-automatic espresso machine.", "votePattern": [5, 7, 7, 9] },
+  { "name": "Breville Smart Oven Air", "brand": "Breville", "description": "Countertop convection oven.", "votePattern": [5, 7, 7, 9] },
+
+  { "name": "Levi's 501 Original", "brand": "Levi's", "description": "Iconic straight-fit denim jeans.", "votePattern": [4, 6, 6, 8] },
+  { "name": "Levi's Trucker Jacket", "brand": "Levi's", "description": "Classic denim jacket.", "votePattern": [4, 6, 6, 8] },
+
+  { "name": "Gucci Ace Sneakers", "brand": "Gucci", "description": "Luxury leather sneakers.", "votePattern": [9, 10, 6, 8] },
+  { "name": "Gucci Marmont Bag", "brand": "Gucci", "description": "Iconic quilted leather handbag.", "votePattern": [9, 10, 7, 9] },
+
+  { "name": "Louis Vuitton Neverfull", "brand": "Louis Vuitton", "description": "Iconic luxury tote bag.", "votePattern": [9, 10, 7, 9] },
+  { "name": "Louis Vuitton Keepall", "brand": "Louis Vuitton", "description": "Luxury travel duffle bag.", "votePattern": [9, 10, 7, 9] },
+
+  { "name": "Hermès Birkin 30", "brand": "Hermès", "description": "Ultra-luxury handbag.", "votePattern": [10, 10, 8, 10] },
+  { "name": "Hermès Kelly", "brand": "Hermès", "description": "Iconic luxury structured handbag.", "votePattern": [10, 10, 8, 10] },
+
+  { "name": "Cartier Tank", "brand": "Cartier", "description": "Iconic rectangular luxury watch.", "votePattern": [9, 10, 8, 10] },
+  { "name": "Cartier Love Bracelet", "brand": "Cartier", "description": "Iconic luxury screw-motif bracelet.", "votePattern": [9, 10, 7, 9] },
+
+  { "name": "Omega Speedmaster", "brand": "Omega", "description": "Legendary moonwatch chronograph.", "votePattern": [8, 10, 8, 10] },
+  { "name": "Omega Seamaster", "brand": "Omega", "description": "Professional dive watch.", "votePattern": [7, 9, 8, 10] },
+
+  { "name": "Tag Heuer Monaco", "brand": "Tag Heuer", "description": "Iconic square racing chronograph.", "votePattern": [7, 9, 7, 9] },
+  { "name": "Tag Heuer Carrera", "brand": "Tag Heuer", "description": "Classic sports chronograph.", "votePattern": [7, 9, 7, 9] },
+
+  { "name": "Fitbit Charge 6", "brand": "Fitbit", "description": "Advanced health and fitness tracker.", "votePattern": [4, 6, 5, 7] },
+  { "name": "Fitbit Versa 4", "brand": "Fitbit", "description": "Health-focused smartwatch.", "votePattern": [4, 6, 5, 7] },
+
+  { "name": "Garmin Fenix 8", "brand": "Garmin", "description": "Premium multisport GPS watch.", "votePattern": [7, 9, 8, 10] },
+  { "name": "Garmin Forerunner 265", "brand": "Garmin", "description": "Advanced running GPS watch.", "votePattern": [5, 7, 7, 9] },
+  { "name": "Garmin Venu 3", "brand": "Garmin", "description": "Health and fitness GPS smartwatch.", "votePattern": [5, 7, 6, 8] },
+
+  { "name": "North Face Nuptse 700", "brand": "The North Face", "description": "Iconic insulated puffer jacket.", "votePattern": [6, 8, 7, 9] },
+  { "name": "North Face Borealis Backpack", "brand": "The North Face", "description": "Popular everyday backpack.", "votePattern": [4, 6, 6, 8] },
+
+  { "name": "Patagonia Better Sweater", "brand": "Patagonia", "description": "Fleece jacket made from recycled material.", "votePattern": [5, 7, 7, 9] },
+  { "name": "Patagonia Nano Puff", "brand": "Patagonia", "description": "Lightweight insulated jacket.", "votePattern": [6, 8, 7, 9] },
+
+  { "name": "LEGO Technic Porsche 911", "brand": "LEGO", "description": "Complex 1580-piece Porsche model kit.", "votePattern": [6, 8, 8, 10] },
+  { "name": "LEGO Star Wars Millennium Falcon", "brand": "LEGO", "description": "7541-piece ultimate collector set.", "votePattern": [8, 10, 8, 10] },
+  { "name": "LEGO City Police Station", "brand": "LEGO", "description": "Classic play set for kids.", "votePattern": [4, 6, 6, 8] },
+
+  { "name": "L'Oréal Revitalift Serum", "brand": "L'Oréal", "description": "Anti-aging hyaluronic acid serum.", "votePattern": [3, 5, 5, 7] },
+  { "name": "L'Oréal True Match Foundation", "brand": "L'Oréal", "description": "Skin-matching liquid foundation.", "votePattern": [2, 4, 5, 7] },
+
+  { "name": "Estée Lauder Advanced Night Repair", "brand": "Estée Lauder", "description": "Iconic anti-aging serum.", "votePattern": [7, 9, 7, 9] },
+
+  { "name": "Nespresso Vertuo Plus", "brand": "Nespresso", "description": "Single-serve coffee machine.", "votePattern": [5, 7, 6, 8] },
+  { "name": "Nespresso Citiz", "brand": "Nespresso", "description": "Compact espresso machine.", "votePattern": [4, 6, 6, 8] },
+
+  { "name": "DeWalt 20V MAX Drill", "brand": "DeWalt", "description": "Cordless drill/driver combo.", "votePattern": [4, 6, 7, 9] },
+  { "name": "DeWalt Table Saw", "brand": "DeWalt", "description": "Portable jobsite table saw.", "votePattern": [6, 8, 7, 9] },
+
+  { "name": "Makita Impact Driver", "brand": "Makita", "description": "Brushless cordless impact driver.", "votePattern": [4, 6, 7, 9] },
+  { "name": "Makita Circular Saw", "brand": "Makita", "description": "Cordless circular saw.", "votePattern": [5, 7, 7, 9] },
+
+  { "name": "Samsonite Freeform 28", "brand": "Samsonite", "description": "Large hardside spinner luggage.", "votePattern": [5, 7, 6, 8] },
+  { "name": "Samsonite Omni 2", "brand": "Samsonite", "description": "Hardside carry-on luggage.", "votePattern": [4, 6, 6, 8] },
+
+  { "name": "Away The Bigger Carry-On", "brand": "Away", "description": "Premium hardside carry-on with battery.", "votePattern": [5, 7, 6, 8] },
+  { "name": "Away The Large", "brand": "Away", "description": "Full-size checked suitcase.", "votePattern": [5, 7, 6, 8] },
+
+  { "name": "Fender Stratocaster", "brand": "Fender", "description": "Iconic electric guitar.", "votePattern": [6, 8, 8, 10] },
+  { "name": "Fender Telecaster", "brand": "Fender", "description": "Classic solid-body electric guitar.", "votePattern": [6, 8, 8, 10] },
+  { "name": "Fender Player Jazz Bass", "brand": "Fender", "description": "Versatile electric bass guitar.", "votePattern": [5, 7, 7, 9] },
+
+  { "name": "Yamaha P-145 Digital Piano", "brand": "Yamaha", "description": "Entry-level digital piano.", "votePattern": [3, 5, 6, 8] },
+  { "name": "Yamaha FG800 Acoustic Guitar", "brand": "Yamaha", "description": "Popular beginner acoustic guitar.", "votePattern": [2, 4, 6, 8] },
+  { "name": "Yamaha HS5 Studio Monitor", "brand": "Yamaha", "description": "Near-field studio monitor speaker.", "votePattern": [4, 6, 7, 9] },
+
+  { "name": "Gibson Les Paul Standard", "brand": "Gibson", "description": "Legendary solid-body electric guitar.", "votePattern": [8, 10, 8, 10] },
+  { "name": "Gibson SG Standard", "brand": "Gibson", "description": "Iconic double-cutaway electric guitar.", "votePattern": [7, 9, 7, 9] },
+
+  { "name": "Logitech MX Master 3S", "brand": "Logitech", "description": "Premium ergonomic wireless mouse.", "votePattern": [5, 7, 8, 10] },
+  { "name": "Logitech G Pro X Superlight", "brand": "Logitech", "description": "Ultra-lightweight gaming mouse.", "votePattern": [6, 8, 8, 10] },
+  { "name": "Logitech C920 Webcam", "brand": "Logitech", "description": "Popular HD webcam.", "votePattern": [3, 5, 6, 8] },
+  { "name": "Logitech MX Keys S", "brand": "Logitech", "description": "Premium wireless keyboard.", "votePattern": [5, 7, 7, 9] },
+
+  { "name": "Razer BlackWidow V4", "brand": "Razer", "description": "Mechanical gaming keyboard.", "votePattern": [6, 8, 7, 9] },
+  { "name": "Razer DeathAdder V3", "brand": "Razer", "description": "Ergonomic gaming mouse.", "votePattern": [5, 7, 7, 9] },
+  { "name": "Razer Kraken V4", "brand": "Razer", "description": "Gaming headset.", "votePattern": [5, 7, 6, 8] },
+
+  { "name": "Corsair K70 RGB", "brand": "Corsair", "description": "Premium mechanical gaming keyboard.", "votePattern": [6, 8, 7, 9] },
+  { "name": "Corsair Vengeance DDR5 RAM", "brand": "Corsair", "description": "High-performance desktop memory.", "votePattern": [5, 7, 7, 9] },
+
+  { "name": "Western Digital Black SN850X", "brand": "Western Digital", "description": "Premium NVMe SSD for gaming.", "votePattern": [5, 7, 8, 10] },
+  { "name": "WD My Passport 5TB", "brand": "Western Digital", "description": "Portable external hard drive.", "votePattern": [3, 5, 6, 8] },
+
+  { "name": "Seagate Barracuda 4TB", "brand": "Seagate", "description": "Internal desktop hard drive.", "votePattern": [2, 4, 5, 7] },
+  { "name": "Seagate FireCuda 530 SSD", "brand": "Seagate", "description": "High-performance NVMe SSD.", "votePattern": [5, 7, 7, 9] },
+
+  { "name": "Synology DS923+", "brand": "Synology", "description": "4-bay NAS for home and business.", "votePattern": [6, 8, 8, 10] },
+  { "name": "Synology DS224+", "brand": "Synology", "description": "2-bay NAS for home use.", "votePattern": [5, 7, 7, 9] },
+
+  { "name": "Sonos Era 300", "brand": "Sonos", "description": "Spatial audio smart speaker.", "votePattern": [7, 9, 7, 9] },
+  { "name": "Sonos Arc Soundbar", "brand": "Sonos", "description": "Premium Dolby Atmos soundbar.", "votePattern": [7, 9, 7, 9] },
+  { "name": "Sonos Move 2", "brand": "Sonos", "description": "Portable smart speaker.", "votePattern": [6, 8, 6, 8] },
+
+  { "name": "Bang & Olufsen Beoplay H100", "brand": "Bang & Olufsen", "description": "Ultra-luxury wireless headphones.", "votePattern": [9, 10, 8, 10] },
+  { "name": "Bang & Olufsen Beosound A5", "brand": "Bang & Olufsen", "description": "Luxury portable speaker.", "votePattern": [8, 10, 7, 9] },
+
+  { "name": "Marshall Stanmore III", "brand": "Marshall", "description": "Retro-styled Bluetooth speaker.", "votePattern": [5, 7, 6, 8] },
+  { "name": "Marshall Monitor III ANC", "brand": "Marshall", "description": "Over-ear headphones with ANC.", "votePattern": [5, 7, 6, 8] },
+
+  { "name": "Anker PowerCore 26800", "brand": "Anker", "description": "High-capacity portable charger.", "votePattern": [2, 4, 6, 8] },
+  { "name": "Anker Soundcore Space A40", "brand": "Anker", "description": "Budget wireless earbuds with ANC.", "votePattern": [2, 4, 6, 8] },
+  { "name": "Anker Nano II 65W Charger", "brand": "Anker", "description": "Compact GaN USB-C charger.", "votePattern": [2, 4, 7, 9] },
+
+  { "name": "Xiaomi 14 Ultra", "brand": "Xiaomi", "description": "Premium camera-focused smartphone.", "votePattern": [5, 7, 7, 9] },
+  { "name": "Xiaomi Redmi Note 13", "brand": "Xiaomi", "description": "Budget smartphone with great value.", "votePattern": [1, 3, 5, 7] },
+  { "name": "Xiaomi Robot Vacuum X20 Max", "brand": "Xiaomi", "description": "Smart robot vacuum and mop.", "votePattern": [4, 6, 6, 8] },
+
+  { "name": "OnePlus 13", "brand": "OnePlus", "description": "Flagship killer smartphone.", "votePattern": [5, 7, 7, 9] },
+  { "name": "OnePlus Buds Pro 3", "brand": "OnePlus", "description": "Premium wireless earbuds.", "votePattern": [4, 6, 6, 8] },
+
+  { "name": "Nothing Phone (2a)", "brand": "Nothing", "description": "Transparent-design mid-range phone.", "votePattern": [3, 5, 5, 7] },
+  { "name": "Nothing Ear (2)", "brand": "Nothing", "description": "Transparent-design wireless earbuds.", "votePattern": [3, 5, 5, 7] },
+
+  { "name": "Fujifilm X-T5", "brand": "Fujifilm", "description": "Retro-styled APS-C mirrorless camera.", "votePattern": [6, 8, 8, 10] },
+  { "name": "Fujifilm X100VI", "brand": "Fujifilm", "description": "Premium compact camera.", "votePattern": [7, 9, 8, 10] },
+
+  { "name": "DJI Mavic 3 Pro", "brand": "DJI", "description": "Professional triple-camera drone.", "votePattern": [7, 9, 8, 10] },
+  { "name": "DJI Mini 4 Pro", "brand": "DJI", "description": "Compact sub-249g camera drone.", "votePattern": [5, 7, 7, 9] },
+  { "name": "DJI Osmo Pocket 3", "brand": "DJI", "description": "Pocket-sized gimbal camera.", "votePattern": [5, 7, 7, 9] },
+
+  { "name": "Leica Q3", "brand": "Leica", "description": "Premium fixed-lens compact camera.", "votePattern": [9, 10, 9, 10] },
+  { "name": "Leica M11", "brand": "Leica", "description": "Iconic rangefinder camera.", "votePattern": [9, 10, 9, 10] },
+
+  { "name": "Vitamix A3500", "brand": "Vitamix", "description": "Smart high-performance blender.", "votePattern": [7, 9, 8, 10] },
+  { "name": "Vitamix Explorian E310", "brand": "Vitamix", "description": "Entry-level professional blender.", "votePattern": [5, 7, 7, 9] },
+
+  { "name": "Instant Pot Duo 7-in-1", "brand": "Instant Pot", "description": "Multi-use pressure cooker.", "votePattern": [3, 5, 6, 8] },
+  { "name": "Instant Pot Pro Plus", "brand": "Instant Pot", "description": "Advanced smart multi-cooker.", "votePattern": [4, 6, 6, 8] },
+
+  { "name": "Ninja Creami", "brand": "Ninja", "description": "Ice cream and frozen treat maker.", "votePattern": [4, 6, 6, 8] },
+  { "name": "Ninja Air Fryer Max XL", "brand": "Ninja", "description": "Large capacity air fryer.", "votePattern": [3, 5, 6, 8] },
+  { "name": "Ninja Woodfire Outdoor Grill", "brand": "Ninja", "description": "Electric outdoor grill with smoker.", "votePattern": [5, 7, 6, 8] },
+
+  { "name": "Peloton Bike+", "brand": "Peloton", "description": "Premium connected exercise bike.", "votePattern": [8, 10, 7, 9] },
+  { "name": "Peloton Tread", "brand": "Peloton", "description": "Connected treadmill.", "votePattern": [7, 9, 6, 8] },
+
+  { "name": "Oura Ring Gen 3", "brand": "Oura", "description": "Health tracking smart ring.", "votePattern": [6, 8, 6, 8] },
+
+  { "name": "Weber Spirit E-325", "brand": "Weber", "description": "Mid-range 3-burner gas grill.", "votePattern": [5, 7, 7, 9] },
+  { "name": "Weber Genesis E-435", "brand": "Weber", "description": "Premium 4-burner gas grill.", "votePattern": [7, 9, 7, 9] },
+
+  { "name": "Columbia Silver Ridge Shirt", "brand": "Columbia Sportswear", "description": "Quick-dry hiking shirt.", "votePattern": [3, 5, 5, 7] },
+  { "name": "Columbia Watertight II Jacket", "brand": "Columbia Sportswear", "description": "Waterproof rain jacket.", "votePattern": [3, 5, 6, 8] },
+
+  { "name": "Under Armour Charged Assert 10", "brand": "Under Armour", "description": "Budget-friendly running shoe.", "votePattern": [3, 5, 5, 7] },
+  { "name": "Under Armour HeatGear Tee", "brand": "Under Armour", "description": "Moisture-wicking performance tee.", "votePattern": [3, 5, 5, 7] },
+
+  { "name": "New Balance 990v6", "brand": "New Balance", "description": "Premium made-in-USA lifestyle shoe.", "votePattern": [6, 8, 7, 9] },
+  { "name": "New Balance Fresh Foam X 1080v13", "brand": "New Balance", "description": "Premium daily running shoe.", "votePattern": [5, 7, 7, 9] },
+
+  { "name": "Puma Suede Classic", "brand": "Puma", "description": "Iconic suede lifestyle sneaker.", "votePattern": [3, 5, 5, 7] },
+  { "name": "Puma RS-X", "brand": "Puma", "description": "Retro-inspired lifestyle sneaker.", "votePattern": [4, 6, 5, 7] },
+
+  { "name": "TP-Link Deco XE75", "brand": "TP-Link", "description": "Tri-band WiFi 6E mesh system.", "votePattern": [4, 6, 6, 8] },
+  { "name": "TP-Link Archer AX73", "brand": "TP-Link", "description": "Dual-band WiFi 6 router.", "votePattern": [3, 5, 6, 8] },
+
+  { "name": "Netgear Orbi RBK863S", "brand": "Netgear", "description": "Premium WiFi 6E mesh system.", "votePattern": [7, 9, 7, 9] },
+  { "name": "Netgear Nighthawk RAX50", "brand": "Netgear", "description": "Dual-band WiFi 6 router.", "votePattern": [5, 7, 5, 7] },
+
+  { "name": "Prada Luna Rossa Cologne", "brand": "Prada", "description": "Men's luxury fragrance.", "votePattern": [7, 9, 6, 8] },
+  { "name": "Prada Galleria Bag", "brand": "Prada", "description": "Iconic Saffiano leather handbag.", "votePattern": [9, 10, 7, 9] },
+
+  { "name": "Zara Oversized Blazer", "brand": "Zara", "description": "Trendy oversized blazer.", "votePattern": [3, 5, 4, 6] },
+  { "name": "H&M Regular Fit Jeans", "brand": "H&M", "description": "Affordable everyday jeans.", "votePattern": [1, 3, 3, 5] },
+  { "name": "Uniqlo HEATTECH Ultra Warm", "brand": "Uniqlo", "description": "Thermal innerwear for cold weather.", "votePattern": [2, 4, 6, 8] },
+  { "name": "Uniqlo Ultra Light Down Jacket", "brand": "Uniqlo", "description": "Compact lightweight down jacket.", "votePattern": [3, 5, 7, 9] },
+
+  { "name": "Dove Beauty Bar", "brand": "Dove", "description": "Classic moisturizing beauty bar.", "votePattern": [1, 3, 5, 7] },
+  { "name": "Clinique Moisture Surge", "brand": "Clinique", "description": "72-hour auto-replenishing hydrator.", "votePattern": [5, 7, 6, 8] },
+
+  { "name": "Coca-Cola Classic", "brand": "Coca-Cola", "description": "Original cola soft drink.", "votePattern": [2, 4, 5, 7] },
+  { "name": "Pepsi Max", "brand": "Pepsi", "description": "Zero sugar cola.", "votePattern": [2, 4, 4, 6] },
+  { "name": "Starbucks Reserve Blend", "brand": "Starbucks", "description": "Premium coffee beans.", "votePattern": [5, 7, 5, 7] },
+
+  { "name": "SteelSeries Arctis Nova Pro", "brand": "SteelSeries", "description": "Premium gaming headset.", "votePattern": [7, 9, 8, 10] },
+  { "name": "HyperX Cloud III", "brand": "HyperX", "description": "Gaming headset.", "votePattern": [4, 6, 6, 8] },
+
+  { "name": "Acer Swift Go 14", "brand": "Acer", "description": "Lightweight OLED productivity laptop.", "votePattern": [5, 7, 5, 7] },
+  { "name": "Acer Predator Helios 16", "brand": "Acer", "description": "High-end gaming laptop.", "votePattern": [7, 9, 7, 9] },
+
+  { "name": "Panasonic Lumix S5 IIX", "brand": "Panasonic", "description": "Full-frame mirrorless camera.", "votePattern": [5, 7, 7, 9] },
+  { "name": "Panasonic Nanoe Hair Dryer", "brand": "Panasonic", "description": "Advanced hair dryer with nanoe technology.", "votePattern": [4, 6, 6, 8] },
+
+  { "name": "Whirlpool French Door Fridge", "brand": "Whirlpool", "description": "French door refrigerator.", "votePattern": [5, 7, 5, 7] },
+  { "name": "Whirlpool Front-Load Washer", "brand": "Whirlpool", "description": "Large capacity front-load washing machine.", "votePattern": [5, 7, 5, 7] },
+
+  { "name": "Motorola Edge 50 Pro", "brand": "Motorola", "description": "Mid-range smartphone with good cameras.", "votePattern": [4, 6, 5, 7] },
+  { "name": "Motorola Moto G Power", "brand": "Motorola", "description": "Budget phone with big battery.", "votePattern": [2, 4, 4, 6] },
+
+  { "name": "Belkin 3-in-1 MagSafe Charger", "brand": "Belkin", "description": "Wireless charging station for Apple devices.", "votePattern": [5, 7, 6, 8] },
+  { "name": "Stanley Quencher H2.0 Tumbler", "brand": "Stanley", "description": "Viral insulated tumbler.", "votePattern": [3, 5, 6, 8] },
+
+  { "name": "Mattel Barbie Dreamhouse", "brand": "Mattel", "description": "Iconic dollhouse playset.", "votePattern": [5, 7, 5, 7] },
+  { "name": "Hasbro Monopoly Classic", "brand": "Hasbro", "description": "Classic property trading board game.", "votePattern": [3, 5, 6, 8] },
+
+  { "name": "Nestlé KitKat", "brand": "Nestlé", "description": "Iconic chocolate wafer bar.", "votePattern": [2, 4, 5, 7] }
+]

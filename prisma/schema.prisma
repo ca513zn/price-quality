@@ -22,15 +22,28 @@ model User {
   updatedAt DateTime @updatedAt
 }
 
+model Category {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  slug        String   @unique
+  description String?
+  brands      Brand[]  @relation("BrandCategories")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([slug])
+}
+
 model Brand {
-  id          String    @id @default(cuid())
-  name        String    @unique
-  slug        String    @unique
+  id          String     @id @default(cuid())
+  name        String     @unique
+  slug        String     @unique
   description String?
   logoUrl     String?
   products    Product[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  categories  Category[] @relation("BrandCategories")
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
 }
 
 model Product {
