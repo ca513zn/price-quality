@@ -49,28 +49,36 @@ function CustomTooltip({ active, payload }) {
 }
 
 function CustomDot(props) {
-  const { cx, cy, payload, labelColor = "#374151", strokeColor = "#fff" } = props;
+  const { cx, cy, payload, labelColor = "#374151", strokeColor = "#fff", showLabels = true } = props;
   const quadrant = getQuadrant(payload.avgPriceScore, payload.avgQualityScore);
   const color = getQuadrantColor(quadrant);
 
+  // Scale dot size: more votes = slightly larger dot
+  const minR = 6;
+  const maxR = 12;
+  const votes = payload.totalVotes || 0;
+  const r = Math.min(maxR, minR + Math.log2(Math.max(1, votes)) * 0.8);
+
   return (
     <g>
-      <circle cx={cx} cy={cy} r={8} fill={color} opacity={0.8} stroke={strokeColor} strokeWidth={2} />
-      <text
-        x={cx}
-        y={cy - 14}
-        textAnchor="middle"
-        fill={labelColor}
-        fontSize={11}
-        fontWeight={500}
-      >
-        {payload.name.length > 18 ? payload.name.slice(0, 16) + "…" : payload.name}
-      </text>
+      <circle cx={cx} cy={cy} r={r} fill={color} opacity={0.85} stroke={strokeColor} strokeWidth={1.5} />
+      {showLabels && (
+        <text
+          x={cx}
+          y={cy - r - 4}
+          textAnchor="middle"
+          fill={labelColor}
+          fontSize={11}
+          fontWeight={500}
+        >
+          {payload.name.length > 18 ? payload.name.slice(0, 16) + "…" : payload.name}
+        </text>
+      )}
     </g>
   );
 }
 
-export default function PerceptionMap({ products }) {
+export default function PerceptionMap({ products, showLabels = true }) {
   const { theme } = useTheme();
   const isDark = theme === "dark";
 
@@ -149,7 +157,14 @@ export default function PerceptionMap({ products }) {
           <Tooltip content={<CustomTooltip />} animationDuration={0} />
           <Scatter
             data={data}
-            shape={(props) => <CustomDot {...props} labelColor={dotLabelColor} strokeColor={dotStroke} />}
+            shape={(props) => (
+              <CustomDot
+                {...props}
+                labelColor={dotLabelColor}
+                strokeColor={dotStroke}
+                showLabels={showLabels}
+              />
+            )}
           />
         </ScatterChart>
       </ResponsiveContainer>
