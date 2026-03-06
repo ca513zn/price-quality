@@ -31,6 +31,12 @@ export default function Header() {
               >
                 Brands
               </Link>
+              <Link
+                href="/vote"
+                className="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition"
+              >
+                🗳️ Vote
+              </Link>
             </nav>
             <ThemeToggle />
             <UserMenu />
