@@ -101,11 +101,11 @@ export default function PerceptionMap({ products, showLabels = true }) {
   return (
     <div className="w-full">
       {/* Quadrant legend */}
-      <div className="flex flex-wrap gap-4 mb-4 justify-center">
+      <div className="flex flex-wrap gap-3 sm:gap-4 mb-4 justify-center">
         {["Premium", "Best Value", "Overpriced", "Budget"].map((q) => (
-          <div key={q} className="flex items-center gap-2 text-sm">
+          <div key={q} className="flex items-center gap-1.5 text-xs sm:text-sm">
             <div
-              className="w-3 h-3 rounded-full"
+              className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full"
               style={{ backgroundColor: getQuadrantColor(q) }}
             />
             <span className="text-gray-700 dark:text-gray-300">{q}</span>
@@ -113,75 +113,80 @@ export default function PerceptionMap({ products, showLabels = true }) {
         ))}
       </div>
 
-      <ResponsiveContainer width="100%" height={500}>
-        <ScatterChart margin={{ top: 20, right: 40, bottom: 30, left: 20 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-          <XAxis
-            type="number"
-            dataKey="avgPriceScore"
-            name="Perceived Price"
-            domain={[0, 10]}
-            ticks={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
-            tick={{ fontSize: 12, fill: tickColor }}
-            stroke={gridColor}
-          >
-            <Label
-              value="Perceived Price →"
-              offset={-10}
-              position="insideBottom"
-              style={{ fontSize: 13, fill: labelColor }}
-            />
-          </XAxis>
-          <YAxis
-            type="number"
-            dataKey="avgQualityScore"
-            name="Perceived Quality"
-            domain={[0, 10]}
-            ticks={[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
-            tick={{ fontSize: 12, fill: tickColor }}
-            stroke={gridColor}
-          >
-            <Label
-              value="Perceived Quality →"
-              angle={-90}
-              position="insideLeft"
-              offset={10}
-              style={{ fontSize: 13, fill: labelColor }}
-            />
-          </YAxis>
-
-          {/* Quadrant dividers */}
-          <ReferenceLine x={5} stroke={refLineColor} strokeDasharray="5 5" />
-          <ReferenceLine y={5} stroke={refLineColor} strokeDasharray="5 5" />
-
-          <Tooltip content={<CustomTooltip />} animationDuration={0} />
-          <Scatter
-            data={data}
-            shape={(props) => (
-              <CustomDot
-                {...props}
-                labelColor={dotLabelColor}
-                strokeColor={dotStroke}
-                showLabels={showLabels}
+      <div className="relative">
+        <div className="h-[320px] sm:h-[500px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <ScatterChart margin={{ top: 20, right: 20, bottom: 30, left: 10 }}>
+            <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
+            <XAxis
+              type="number"
+              dataKey="avgPriceScore"
+              name="Perceived Price"
+              domain={[0, 10]}
+              ticks={[0, 2, 4, 5, 6, 8, 10]}
+              tick={{ fontSize: 11, fill: tickColor }}
+              stroke={gridColor}
+            >
+              <Label
+                value="Perceived Price →"
+                offset={-10}
+                position="insideBottom"
+                style={{ fontSize: 12, fill: labelColor }}
               />
-            )}
-          />
-        </ScatterChart>
-      </ResponsiveContainer>
+            </XAxis>
+            <YAxis
+              type="number"
+              dataKey="avgQualityScore"
+              name="Perceived Quality"
+              domain={[0, 10]}
+              ticks={[0, 2, 4, 5, 6, 8, 10]}
+              tick={{ fontSize: 11, fill: tickColor }}
+              stroke={gridColor}
+              width={30}
+            >
+              <Label
+                value="Quality →"
+                angle={-90}
+                position="insideLeft"
+                offset={5}
+                style={{ fontSize: 12, fill: labelColor }}
+              />
+            </YAxis>
 
-      {/* Quadrant labels overlaid */}
-      <div className="relative -mt-[480px] pointer-events-none h-[460px] mx-[60px]">
-        <div className="absolute top-2 left-2 text-xs font-medium text-amber-500/50 uppercase tracking-wide">
-          Budget
+            {/* Quadrant dividers */}
+            <ReferenceLine x={5} stroke={refLineColor} strokeDasharray="5 5" />
+            <ReferenceLine y={5} stroke={refLineColor} strokeDasharray="5 5" />
+
+            <Tooltip content={<CustomTooltip />} animationDuration={0} />
+            <Scatter
+              data={data}
+              shape={(props) => (
+                <CustomDot
+                  {...props}
+                  labelColor={dotLabelColor}
+                  strokeColor={dotStroke}
+                  showLabels={showLabels}
+                />
+              )}
+            />
+          </ScatterChart>
+        </ResponsiveContainer>
         </div>
-        <div className="absolute top-2 right-2 text-xs font-medium text-red-500/50 uppercase tracking-wide">
-          Overpriced
-        </div>
-        <div className="absolute bottom-8 left-2 text-xs font-medium text-emerald-500/50 uppercase tracking-wide">
-          Best Value
-        </div>
-        <div className="absolute bottom-8 right-2 text-xs font-medium text-purple-500/50 uppercase tracking-wide">
-          Premium
+
+        {/* Quadrant labels overlaid — positioned absolutely within the chart area */}
+        <div className="absolute inset-0 pointer-events-none" style={{ left: 40, right: 20, top: 20, bottom: 30 }}>
+          <div className="absolute top-1 left-1 text-[10px] sm:text-xs font-medium text-amber-500/40 uppercase tracking-wide">
+            Budget
+          </div>
+          <div className="absolute top-1 right-1 text-[10px] sm:text-xs font-medium text-red-500/40 uppercase tracking-wide">
+            Overpriced
+          </div>
+          <div className="absolute bottom-1 left-1 text-[10px] sm:text-xs font-medium text-emerald-500/40 uppercase tracking-wide">
+            Best Value
+          </div>
+          <div className="absolute bottom-1 right-1 text-[10px] sm:text-xs font-medium text-purple-500/40 uppercase tracking-wide">
+            Premium
+          </div>
         </div>
       </div>
     </div>

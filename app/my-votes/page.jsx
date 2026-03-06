@@ -104,9 +104,9 @@ export default function MyVotesPage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">My Votes</h1>
-      <p className="text-gray-500 dark:text-gray-400 mb-8">
+    <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">My Votes</h1>
+      <p className="text-gray-500 dark:text-gray-400 mb-6 sm:mb-8">
         Manage your product ratings. You can edit or remove any of your votes.
       </p>
 
@@ -227,8 +227,8 @@ export default function MyVotesPage() {
                     </div>
                   </div>
                 ) : (
-                  <div className="flex items-center justify-between">
-                    <div className="flex gap-6 text-sm">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div className="flex gap-4 sm:gap-6 text-sm">
                       <span className="text-gray-600 dark:text-gray-400">
                         Price: <strong className="text-gray-900 dark:text-gray-100">{vote.priceScore}</strong>/10
                       </span>

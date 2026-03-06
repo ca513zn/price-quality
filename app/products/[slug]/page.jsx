@@ -45,20 +45,20 @@ export default async function ProductPage({ params }) {
   const quadrantColor = getQuadrantColor(quadrant);
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       {/* Breadcrumb */}
-      <nav className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+      <nav className="text-sm text-gray-500 dark:text-gray-400 mb-4 sm:mb-6 truncate">
         <Link href="/" className="hover:text-gray-700 dark:hover:text-gray-300">Home</Link>
-        <span className="mx-2">/</span>
+        <span className="mx-1.5 sm:mx-2">/</span>
         <Link href="/products" className="hover:text-gray-700 dark:hover:text-gray-300">Products</Link>
-        <span className="mx-2">/</span>
+        <span className="mx-1.5 sm:mx-2">/</span>
         <span className="text-gray-900 dark:text-gray-100">{product.name}</span>
       </nav>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
         {/* Product Info */}
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{product.name}</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{product.name}</h1>
           <Link
             href={`/brands/${product.brand.slug}`}
             className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium mt-1 inline-block"
@@ -71,8 +71,8 @@ export default async function ProductPage({ params }) {
           )}
 
           {/* Scores */}
-          <div className="mt-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-5">
-            <div className="flex items-center justify-between mb-4">
+          <div className="mt-6 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-4 sm:p-5">
+            <div className="flex items-center justify-between mb-4 gap-2">
               <h2 className="font-semibold text-gray-900 dark:text-gray-100">Aggregated Scores</h2>
               <span
                 className="text-xs font-medium px-2.5 py-1 rounded-full"

@@ -102,8 +102,8 @@ export default function BrandsPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">All Brands</h1>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">All Brands</h1>
       <p className="text-gray-600 dark:text-gray-400 mb-6">
         Explore brands and see how their products are perceived.
       </p>

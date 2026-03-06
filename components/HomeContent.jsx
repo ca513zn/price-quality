@@ -31,24 +31,24 @@ export default function HomeContent({ products, categories }) {
     : `Top ${filteredProducts.length} most-voted products`;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       {/* Hero */}
-      <div className="text-center mb-8">
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-gray-100">
+      <div className="text-center mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-gray-100">
           Price vs Quality Perception Map
         </h1>
-        <p className="mt-2 text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+        <p className="mt-2 text-sm sm:text-base text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
           See how products are perceived by real users. Vote on price and quality
           to help place them on the map.
         </p>
       </div>
 
-      {/* Category Filter */}
+      {/* Category Filter — horizontally scrollable on mobile */}
       <div className="mb-4">
-        <div className="flex flex-wrap gap-2 justify-center">
+        <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap sm:justify-center scrollbar-hide">
           <button
             onClick={() => setSelectedCategory(null)}
-            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
+            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all whitespace-nowrap shrink-0 ${
               !selectedCategory
                 ? "bg-blue-600 text-white shadow-md"
                 : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
@@ -60,7 +60,7 @@ export default function HomeContent({ products, categories }) {
             <button
               key={cat.id}
               onClick={() => setSelectedCategory(cat.id)}
-              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
+              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all whitespace-nowrap shrink-0 ${
                 selectedCategory === cat.id
                   ? "bg-blue-600 text-white shadow-md"
                   : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
@@ -76,7 +76,7 @@ export default function HomeContent({ products, categories }) {
       </div>
 
       {/* Perception Map */}
-      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-6 mb-10">
+      <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-2 sm:p-6 mb-8 sm:mb-10">
         {filteredProducts.length > 0 ? (
           <PerceptionMap
             products={filteredProducts}
@@ -101,8 +101,8 @@ export default function HomeContent({ products, categories }) {
       {/* Top Products Grid */}
       {filteredProducts.length > 0 && (
         <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
+          <div className="flex items-center justify-between mb-4 gap-4">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 truncate">
               {selectedCategoryName ? `Top ${selectedCategoryName} Products` : "Most Voted Products"}
             </h2>
             <Link

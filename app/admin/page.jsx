@@ -219,16 +219,16 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
       <div className="flex items-center gap-3 mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Admin Panel</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">Admin Panel</h1>
         <span className="text-xs font-semibold uppercase tracking-wide text-purple-600 dark:text-purple-400 bg-purple-100 dark:bg-purple-900/30 px-2 py-0.5 rounded">
           Admin
         </span>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-8 border-b border-gray-200 dark:border-gray-800">
+      <div className="flex gap-1 mb-6 sm:mb-8 border-b border-gray-200 dark:border-gray-800 overflow-x-auto scrollbar-hide">
         {[
           { key: "submissions", label: "Submissions", count: submissions.length },
           { key: "create", label: "Create" },
@@ -300,8 +300,8 @@ export default function AdminPage() {
                         {sub.description && (
                           <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">{sub.description}</p>
                         )}
-                        <div className="flex items-center gap-4 mt-2 text-xs text-gray-400 dark:text-gray-500">
-                          <span>By {sub.submitter?.name || "Unknown"} ({sub.submitter?.email})</span>
+                        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs text-gray-400 dark:text-gray-500">
+                          <span className="truncate max-w-[200px]">By {sub.submitter?.name || "Unknown"} ({sub.submitter?.email})</span>
                           <span>{new Date(sub.createdAt).toLocaleString()}</span>
                           {sub.websiteUrl && <a href={sub.websiteUrl} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">{sub.websiteUrl}</a>}
                         </div>

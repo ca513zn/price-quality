@@ -20,7 +20,7 @@ export default function ProductCard({ product }) {
           </p>
         </div>
         <span
-          className="text-xs font-medium px-2 py-1 rounded-full"
+          className="text-xs font-medium px-2 py-1 rounded-full shrink-0"
           style={{ backgroundColor: `${color}20`, color }}
         >
           {quadrant}
