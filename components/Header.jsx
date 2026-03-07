@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useAuth } from "@/components/AuthProvider";
 import ThemeToggle from "@/components/ThemeToggle";
 import { Map, Package, Tag, Vote, LogIn } from "lucide-react";
@@ -10,13 +11,19 @@ const NAV_LINKS = [
   { href: "/", label: "Map", icon: Map },
   { href: "/products", label: "Products", icon: Package },
   { href: "/brands", label: "Brands", icon: Tag },
-  { href: "/vote", label: "Quick Vote", icon: Vote, highlight: true },
+  { href: "/vote", label: "Quick Vote", icon: Vote },
 ];
 
 export default function Header() {
   const { user, loading, logout } = useAuth();
+  const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const menuRef = useRef(null);
+
+  function isActive(href) {
+    if (href === "/") return pathname === "/";
+    return pathname.startsWith(href);
+  }
 
   // Close on outside click
   useEffect(() => {
@@ -57,20 +64,23 @@ export default function Header() {
           {/* Desktop nav */}
           <div className="hidden md:flex items-center gap-4">
             <nav className="flex items-center gap-1">
-              {NAV_LINKS.map(({ href, label, icon: Icon, highlight }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition ${
-                    highlight
-                      ? "text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20"
-                      : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800"
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  {label}
-                </Link>
-              ))}
+              {NAV_LINKS.map(({ href, label, icon: Icon }) => {
+                const active = isActive(href);
+                return (
+                  <Link
+                    key={href}
+                    href={href}
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition ${
+                      active
+                        ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20"
+                        : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800"
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    {label}
+                  </Link>
+                );
+              })}
             </nav>
             <ThemeToggle />
             {/* Desktop avatar / sign in */}
@@ -124,21 +134,24 @@ export default function Header() {
 
           {/* Nav links */}
           <nav className="flex flex-col px-2 py-2 gap-0.5">
-            {NAV_LINKS.map(({ href, label, icon: Icon, highlight }) => (
-              <Link
-                key={href}
-                href={href}
-                onClick={close}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition ${
-                  highlight
-                    ? "text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20"
-                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
-                }`}
-              >
-                <Icon className="w-4 h-4" />
-                {label}
-              </Link>
-            ))}
+            {NAV_LINKS.map(({ href, label, icon: Icon }) => {
+              const active = isActive(href);
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  onClick={close}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition ${
+                    active
+                      ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20"
+                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  {label}
+                </Link>
+              );
+            })}
           </nav>
 
           {/* User links */}

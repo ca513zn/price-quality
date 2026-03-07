@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import PerceptionMap from "@/components/PerceptionMap";
 import ProductCard from "@/components/ProductCard";
 import Link from "next/link";
@@ -8,8 +8,50 @@ import Link from "next/link";
 const MAX_DOTS_OVERVIEW = 30;
 const MAX_DOTS_CATEGORY = 5;
 
+const TYPEWRITER_PHRASES = [
+  "See how products are perceived by real users. Vote on price and quality to help place them on the map.",
+  "Discover which products give you the most bang for your buck — powered by community votes.",
+  "Is it worth the price? The crowd has spoken. Explore the map and cast your vote.",
+  "Real opinions, real data. Help us map every product from budget gems to premium picks.",
+  "Find overpriced products, hidden gems, and everything in between — one vote at a time.",
+];
+
+function useTypewriter(phrases, { typeSpeed = 35, deleteSpeed = 20, pauseMs = 3000 } = {}) {
+  const [phraseIndex, setPhraseIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const full = phrases[phraseIndex];
+
+    if (!isDeleting) {
+      if (charIndex < full.length) {
+        const timer = setTimeout(() => setCharIndex((c) => c + 1), typeSpeed);
+        return () => clearTimeout(timer);
+      } else {
+        const timer = setTimeout(() => setIsDeleting(true), pauseMs);
+        return () => clearTimeout(timer);
+      }
+    } else {
+      if (charIndex > 0) {
+        const timer = setTimeout(() => setCharIndex((c) => c - 1), deleteSpeed);
+        return () => clearTimeout(timer);
+      } else {
+        const timer = setTimeout(() => {
+          setIsDeleting(false);
+          setPhraseIndex((p) => (p + 1) % phrases.length);
+        }, deleteSpeed);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [phrases, phraseIndex, charIndex, isDeleting, typeSpeed, deleteSpeed, pauseMs]);
+
+  return phrases[phraseIndex].slice(0, charIndex);
+}
+
 export default function HomeContent({ products, categories }) {
   const [selectedCategory, setSelectedCategory] = useState(null); // null = overview
+  const typewriterText = useTypewriter(TYPEWRITER_PHRASES);
 
   const filteredProducts = useMemo(() => {
     if (!selectedCategory) {
@@ -35,11 +77,14 @@ export default function HomeContent({ products, categories }) {
       {/* Hero */}
       <div className="text-center mb-6 sm:mb-8">
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-gray-100">
-          Price vs Quality Perception Map
+          Price vs Quality{" "}
+          <span className="bg-gradient-to-r from-blue-600 to-purple-500 bg-clip-text text-transparent">
+            Perception Map
+          </span>
         </h1>
-        <p className="mt-2 text-sm sm:text-base text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-          See how products are perceived by real users. Vote on price and quality
-          to help place them on the map.
+        <p className="mt-2 text-sm sm:text-base text-gray-600 dark:text-gray-400 max-w-2xl mx-auto h-12 sm:h-10">
+          {typewriterText}
+          <span className="inline-block w-[2px] h-4 bg-blue-500 dark:bg-blue-400 ml-0.5 align-middle animate-pulse" />
         </p>
       </div>
 
