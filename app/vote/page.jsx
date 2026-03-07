@@ -42,7 +42,7 @@ function getQuadrant(price, quality) {
 export default function QuickVotePage() {
   const [queue, setQueue] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [step, setStep] = useState("price"); // price | quality | submitting | result
+  const [step, setStep] = useState("vote"); // vote | submitting | result
   const [priceVote, setPriceVote] = useState(null);
   const [qualityVote, setQualityVote] = useState(null);
   const [result, setResult] = useState(null);
@@ -51,7 +51,8 @@ export default function QuickVotePage() {
   const [stats, setStats] = useState({ remaining: 0, totalVoted: 0 });
   const [allDone, setAllDone] = useState(false);
   const [animateIn, setAnimateIn] = useState(false);
-  const [hoveredScore, setHoveredScore] = useState(null);
+  const [hoveredPrice, setHoveredPrice] = useState(null);
+  const [hoveredQuality, setHoveredQuality] = useState(null);
   const fetchingRef = useRef(false);
   const timerRef = useRef(null);
 
@@ -126,15 +127,8 @@ export default function QuickVotePage() {
   const currentProduct = queue[currentIndex];
 
   // ── Handlers ─────────────────────────────────────────────
-  const handlePriceVote = (value) => {
-    setPriceVote(value);
-    setHoveredScore(null);
-    setStep("quality");
-  };
-
-  const handleQualityVote = async (value) => {
-    setQualityVote(value);
-    setHoveredScore(null);
+  const submitVote = async () => {
+    if (priceVote === null || qualityVote === null) return;
     setStep("submitting");
 
     try {
@@ -144,7 +138,7 @@ export default function QuickVotePage() {
         body: JSON.stringify({
           productId: currentProduct.id,
           priceScore: priceVote,
-          qualityScore: value,
+          qualityScore: qualityVote,
         }),
       });
 
@@ -157,7 +151,7 @@ export default function QuickVotePage() {
         const product = productData?.product;
 
         const avgPrice = product?.avgPriceScore || priceVote;
-        const avgQuality = product?.avgQualityScore || value;
+        const avgQuality = product?.avgQualityScore || qualityVote;
         const quadrant = getQuadrant(avgPrice, avgQuality);
 
         setResult({
@@ -166,7 +160,7 @@ export default function QuickVotePage() {
           totalVotes: product?.totalVotes || 1,
           quadrant,
           yourPrice: priceVote,
-          yourQuality: value,
+          yourQuality: qualityVote,
         });
         setStep("result");
         setStats((prev) => ({
@@ -207,8 +201,9 @@ export default function QuickVotePage() {
     setPriceVote(null);
     setQualityVote(null);
     setResult(null);
-    setHoveredScore(null);
-    setStep("price");
+    setHoveredPrice(null);
+    setHoveredQuality(null);
+    setStep("vote");
   };
 
   const skipProduct = () => {
@@ -363,36 +358,90 @@ export default function QuickVotePage() {
             )}
           </div>
 
-          {/* ── Vote: Price ─────────────────────────────── */}
-          {step === "price" && (
-            <VoteButtons
-              title="How expensive is this? 💰"
-              subtitle="1 = dirt cheap · 10 = outrageously expensive"
-              labels={PRICE_LABELS}
-              onSelect={handlePriceVote}
-              onSkip={skipProduct}
-              hoveredScore={hoveredScore}
-              setHoveredScore={setHoveredScore}
-            />
-          )}
-
-          {/* ── Vote: Quality ───────────────────────────── */}
-          {step === "quality" && (
-            <div>
-              <div className="flex justify-center mb-4">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 text-sm font-medium">
-                  💰 Price: {priceVote}/10
-                </span>
+          {/* ── Vote: Price + Quality on one screen ──── */}
+          {step === "vote" && (
+            <div className="space-y-5">
+              {/* Price row */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+                    💰 How expensive?
+                  </h3>
+                  <div className="h-4">
+                    {hoveredPrice ? (
+                      <span className="text-xs text-gray-500 dark:text-gray-400 animate-fade-in">
+                        {PRICE_LABELS[hoveredPrice]}
+                      </span>
+                    ) : priceVote ? (
+                      <span className="text-xs font-medium text-blue-500 dark:text-blue-400">
+                        {priceVote}/10 — {PRICE_LABELS[priceVote]}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-gray-400 dark:text-gray-500">
+                        1 = cheap · 10 = expensive
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <HeatmapRow
+                  selected={priceVote}
+                  onSelect={setPriceVote}
+                  hoveredScore={hoveredPrice}
+                  setHoveredScore={setHoveredPrice}
+                />
               </div>
-              <VoteButtons
-                title="How's the quality? ⭐"
-                subtitle="1 = terrible · 10 = perfect"
-                labels={QUALITY_LABELS}
-                onSelect={handleQualityVote}
-                onSkip={skipProduct}
-                hoveredScore={hoveredScore}
-                setHoveredScore={setHoveredScore}
-              />
+
+              {/* Quality row */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+                    ⭐ How&apos;s the quality?
+                  </h3>
+                  <div className="h-4">
+                    {hoveredQuality ? (
+                      <span className="text-xs text-gray-500 dark:text-gray-400 animate-fade-in">
+                        {QUALITY_LABELS[hoveredQuality]}
+                      </span>
+                    ) : qualityVote ? (
+                      <span className="text-xs font-medium text-blue-500 dark:text-blue-400">
+                        {qualityVote}/10 — {QUALITY_LABELS[qualityVote]}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-gray-400 dark:text-gray-500">
+                        1 = terrible · 10 = perfect
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <HeatmapRow
+                  selected={qualityVote}
+                  onSelect={setQualityVote}
+                  hoveredScore={hoveredQuality}
+                  setHoveredScore={setHoveredQuality}
+                />
+              </div>
+
+              {/* Submit + Skip */}
+              <div className="pt-1 space-y-2">
+                <button
+                  onClick={submitVote}
+                  disabled={priceVote === null || qualityVote === null}
+                  className="w-full py-3 rounded-xl font-semibold text-white transition-all duration-200 touch-manipulation
+                    bg-blue-600 hover:bg-blue-700 active:scale-[0.98]
+                    disabled:opacity-30 disabled:cursor-not-allowed disabled:active:scale-100"
+                >
+                  {priceVote !== null && qualityVote !== null
+                    ? `Submit Vote — ${priceVote} Price, ${qualityVote} Quality`
+                    : "Select both ratings to submit"}
+                </button>
+                <button
+                  onClick={skipProduct}
+                  className="w-full py-2.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300
+                    text-sm transition-colors touch-manipulation"
+                >
+                  🤷 I don&apos;t know this product — skip
+                </button>
+              </div>
             </div>
           )}
 
@@ -469,62 +518,44 @@ export default function QuickVotePage() {
   );
 }
 
-// ── Reusable vote button grid ──────────────────────────────
-function VoteButtons({
-  title,
-  subtitle,
-  labels,
-  onSelect,
-  onSkip,
-  hoveredScore,
-  setHoveredScore,
-}) {
+// ── Heatmap color mapping (red → green) ────────────────────
+const HEATMAP_COLORS = {
+  1:  { bg: "bg-red-500/15",    border: "border-red-500",    text: "text-red-600 dark:text-red-400",       activeBg: "bg-red-500",       activeText: "text-white" },
+  2:  { bg: "bg-red-400/15",    border: "border-red-400",    text: "text-red-500 dark:text-red-400",       activeBg: "bg-red-400",       activeText: "text-white" },
+  3:  { bg: "bg-orange-500/15", border: "border-orange-500", text: "text-orange-600 dark:text-orange-400", activeBg: "bg-orange-500",    activeText: "text-white" },
+  4:  { bg: "bg-orange-400/15", border: "border-orange-400", text: "text-orange-500 dark:text-orange-400", activeBg: "bg-orange-400",    activeText: "text-white" },
+  5:  { bg: "bg-yellow-500/15", border: "border-yellow-500", text: "text-yellow-600 dark:text-yellow-400", activeBg: "bg-yellow-500",    activeText: "text-white" },
+  6:  { bg: "bg-yellow-400/15", border: "border-yellow-400", text: "text-yellow-600 dark:text-yellow-300", activeBg: "bg-yellow-400",    activeText: "text-white" },
+  7:  { bg: "bg-lime-500/15",   border: "border-lime-500",   text: "text-lime-600 dark:text-lime-400",     activeBg: "bg-lime-500",      activeText: "text-white" },
+  8:  { bg: "bg-lime-400/15",   border: "border-lime-400",   text: "text-lime-600 dark:text-lime-300",     activeBg: "bg-lime-400",      activeText: "text-white" },
+  9:  { bg: "bg-green-500/15",  border: "border-green-500",  text: "text-green-600 dark:text-green-400",   activeBg: "bg-green-500",     activeText: "text-white" },
+  10: { bg: "bg-emerald-500/15",border: "border-emerald-500",text: "text-emerald-600 dark:text-emerald-400",activeBg: "bg-emerald-500",  activeText: "text-white" },
+};
+
+// ── Reusable heatmap row of 1–10 buttons ───────────────────
+function HeatmapRow({ selected, onSelect, hoveredScore, setHoveredScore }) {
   return (
-    <div className="space-y-4">
-      <div className="text-center">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-          {title}
-        </h3>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-          {subtitle}
-        </p>
-      </div>
-
-      {/* Hover label */}
-      <div className="h-5 text-center">
-        {hoveredScore && (
-          <span className="text-sm text-blue-500 dark:text-blue-400 font-medium animate-fade-in">
-            {labels[hoveredScore]}
-          </span>
-        )}
-      </div>
-
-      <div className="grid grid-cols-5 gap-2 sm:gap-3">
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
+    <div className="flex gap-1 sm:gap-1.5">
+      {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => {
+        const c = HEATMAP_COLORS[value];
+        const isSelected = selected === value;
+        return (
           <button
             key={value}
             onClick={() => onSelect(value)}
             onMouseEnter={() => setHoveredScore(value)}
             onMouseLeave={() => setHoveredScore(null)}
-            className="aspect-square flex items-center justify-center rounded-xl text-xl font-bold
-              bg-white dark:bg-gray-800 border-2 border-gray-200 dark:border-gray-700
-              text-gray-900 dark:text-white
-              hover:border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20
-              active:scale-90 transition-all duration-150 touch-manipulation
-              min-h-[48px] min-w-[48px]"
+            className={`flex-1 aspect-square flex items-center justify-center rounded-lg sm:rounded-xl
+              border-2 transition-all duration-150 touch-manipulation active:scale-90
+              ${isSelected
+                ? `${c.activeBg} ${c.border} ${c.activeText} scale-105 shadow-md`
+                : `${c.bg} ${c.border} ${c.text} hover:brightness-110`
+              }`}
           >
-            {value}
+            <span className="text-sm sm:text-base font-bold">{value}</span>
           </button>
-        ))}
-      </div>
-
-      <button
-        onClick={onSkip}
-        className="w-full mt-4 py-3 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300
-          text-sm transition-colors touch-manipulation"
-      >
-        🤷 I don&apos;t know this product — skip
-      </button>
+        );
+      })}
     </div>
   );
 }
