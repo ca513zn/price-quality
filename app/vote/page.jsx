@@ -327,7 +327,7 @@ export default function QuickVotePage() {
       </div>
 
       {/* ── Main card area ────────────────────────────────── */}
-      <div className="flex-1 flex items-center justify-center p-4">
+      <div className="flex-1 flex items-start justify-center p-4">
         <div
           className={`w-full max-w-lg transition-all duration-300 ${
             animateIn
