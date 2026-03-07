@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import PerceptionMap from "@/components/PerceptionMap";
 import ProductCard from "@/components/ProductCard";
 import Link from "next/link";
+import { ChevronDown, X } from "lucide-react";
 
 const MAX_DOTS_OVERVIEW = 30;
-const MAX_DOTS_CATEGORY = 5;
+const MAX_DOTS_PER_CATEGORY = 10;
 
 const TYPEWRITER_PHRASES = [
   "See how products are perceived by real users. Vote on price and quality to help place them on the map.",
@@ -50,27 +51,59 @@ function useTypewriter(phrases, { typeSpeed = 35, deleteSpeed = 20, pauseMs = 30
 }
 
 export default function HomeContent({ products, categories }) {
-  const [selectedCategory, setSelectedCategory] = useState(null); // null = overview
+  const [selectedCategories, setSelectedCategories] = useState([]); // empty = show top voted
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
   const typewriterText = useTypewriter(TYPEWRITER_PHRASES);
 
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClick(e) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+    }
+    if (dropdownOpen) document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [dropdownOpen]);
+
+  function toggleCategory(id) {
+    setSelectedCategories((prev) =>
+      prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]
+    );
+  }
+
+  function clearCategories() {
+    setSelectedCategories([]);
+    setDropdownOpen(false);
+  }
+
   const filteredProducts = useMemo(() => {
-    if (!selectedCategory) {
-      // Overview: show top products by votes (capped for readability)
+    if (selectedCategories.length === 0) {
       return products.slice(0, MAX_DOTS_OVERVIEW);
     }
-    // Category view: top 5 most-voted products in that category
     return products
-      .filter((p) => p.categoryIds.includes(selectedCategory))
-      .slice(0, MAX_DOTS_CATEGORY);
-  }, [products, selectedCategory]);
+      .filter((p) => p.categoryIds.some((id) => selectedCategories.includes(id)))
+      .slice(0, MAX_DOTS_PER_CATEGORY * selectedCategories.length);
+  }, [products, selectedCategories]);
 
-  const selectedCategoryName = selectedCategory
-    ? categories.find((c) => c.id === selectedCategory)?.name || "Category"
-    : null;
+  const selectedCategoryNames = selectedCategories
+    .map((id) => categories.find((c) => c.id === id)?.name)
+    .filter(Boolean);
 
-  const mapLabel = selectedCategoryName
-    ? `Top ${filteredProducts.length} most-voted in ${selectedCategoryName}`
-    : `Top ${filteredProducts.length} most-voted products`;
+  const mapLabel =
+    selectedCategories.length === 0
+      ? `Top ${filteredProducts.length} most-voted products`
+      : selectedCategories.length === 1
+        ? `Top ${filteredProducts.length} in ${selectedCategoryNames[0]}`
+        : `Top ${filteredProducts.length} across ${selectedCategories.length} categories`;
+
+  const gridTitle =
+    selectedCategories.length === 0
+      ? "Most Voted Products"
+      : selectedCategories.length === 1
+        ? `Top ${selectedCategoryNames[0]} Products`
+        : `Top Products (${selectedCategories.length} categories)`;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
@@ -88,39 +121,7 @@ export default function HomeContent({ products, categories }) {
         </p>
       </div>
 
-      {/* Category Filter — horizontally scrollable on mobile */}
-      <div className="mb-4">
-        <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap sm:justify-center scrollbar-hide">
-          <button
-            onClick={() => setSelectedCategory(null)}
-            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all whitespace-nowrap shrink-0 ${
-              !selectedCategory
-                ? "bg-blue-600 text-white shadow-md"
-                : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
-            }`}
-          >
-            🔥 Top Voted
-          </button>
-          {categories.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setSelectedCategory(cat.id)}
-              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all whitespace-nowrap shrink-0 ${
-                selectedCategory === cat.id
-                  ? "bg-blue-600 text-white shadow-md"
-                  : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
-              }`}
-            >
-              {cat.name}
-            </button>
-          ))}
-        </div>
-        <p className="text-center text-xs text-gray-400 dark:text-gray-500 mt-2">
-          {mapLabel}
-        </p>
-      </div>
-
-      {/* Perception Map */}
+            {/* Perception Map */}
       <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-800 p-2 sm:p-6 mb-8 sm:mb-10">
         {filteredProducts.length > 0 ? (
           <PerceptionMap
@@ -143,12 +144,93 @@ export default function HomeContent({ products, categories }) {
         )}
       </div>
 
+      {/* Category Filter — multiselect dropdown */}
+      <div className="mb-4 flex flex-col items-center gap-2">
+        <div className="relative w-full max-w-sm" ref={dropdownRef}>
+          <button
+            onClick={() => setDropdownOpen((o) => !o)}
+            className="w-full flex items-center justify-between gap-2 px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-sm text-gray-700 dark:text-gray-300 hover:border-gray-400 dark:hover:border-gray-600 transition"
+          >
+            <span className="truncate">
+              {selectedCategories.length === 0
+                ? "All Categories — Top Voted"
+                : `${selectedCategories.length} ${selectedCategories.length === 1 ? "category" : "categories"} selected`}
+            </span>
+            <ChevronDown className={`w-4 h-4 shrink-0 text-gray-400 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} />
+          </button>
+
+          {/* Selected tags */}
+          {selectedCategories.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mt-2">
+              {selectedCategoryNames.map((name, i) => (
+                <button
+                  key={selectedCategories[i]}
+                  onClick={() => toggleCategory(selectedCategories[i])}
+                  className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition"
+                >
+                  {name}
+                  <X className="w-3 h-3" />
+                </button>
+              ))}
+              <button
+                onClick={clearCategories}
+                className="text-xs text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition px-1"
+              >
+                Clear all
+              </button>
+            </div>
+          )}
+
+          {/* Dropdown list */}
+          {dropdownOpen && (
+            <div className="absolute z-40 mt-1 w-full max-h-60 overflow-y-auto rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-lg py-1">
+              <button
+                onClick={clearCategories}
+                className={`w-full text-left px-3 py-2 text-sm transition ${
+                  selectedCategories.length === 0
+                    ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 font-medium"
+                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                }`}
+              >
+                All Categories — Top Voted
+              </button>
+              {categories.map((cat) => {
+                const isSelected = selectedCategories.includes(cat.id);
+                return (
+                  <button
+                    key={cat.id}
+                    onClick={() => toggleCategory(cat.id)}
+                    className={`w-full text-left px-3 py-2 text-sm transition flex items-center justify-between ${
+                      isSelected
+                        ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 font-medium"
+                        : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                    }`}
+                  >
+                    {cat.name}
+                    {isSelected && (
+                      <svg className="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                      </svg>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+        <p className="text-xs text-gray-400 dark:text-gray-500">
+          {mapLabel}
+        </p>
+      </div>
+
+
+
       {/* Top Products Grid */}
       {filteredProducts.length > 0 && (
         <div>
           <div className="flex items-center justify-between mb-4 gap-4">
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-gray-100 truncate">
-              {selectedCategoryName ? `Top ${selectedCategoryName} Products` : "Most Voted Products"}
+              {gridTitle}
             </h2>
             <Link
               href="/products"
