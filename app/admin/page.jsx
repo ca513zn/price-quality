@@ -13,6 +13,120 @@ const STATUS_STYLES = {
   DUPLICATE: { label: "Duplicate", bg: "bg-gray-100 dark:bg-gray-800", text: "text-gray-700 dark:text-gray-300" },
 };
 
+// Reusable row for editing a product image (used in both Missing and All views)
+function ImageRow({ product, inputValue, uploading, saving, error, success, onInputChange, onUpload, onSave, onCancel, fileInputRef }) {
+  const localFileRef = useRef(null);
+  const setRef = (el) => {
+    localFileRef.current = el;
+    if (fileInputRef) fileInputRef(el);
+  };
+  return (
+    <div
+      className={`bg-white dark:bg-gray-900 border rounded-lg p-3 sm:p-4 transition-all ${
+        success
+          ? "border-green-300 dark:border-green-700 bg-green-50 dark:bg-green-900/10"
+          : "border-gray-200 dark:border-gray-800"
+      }`}
+    >
+      <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+        {/* Product info */}
+        <div className="min-w-0 sm:w-48 shrink-0">
+          <p className="font-medium text-sm text-gray-900 dark:text-gray-100 truncate">
+            {product.name}
+          </p>
+          <p className="text-xs text-gray-400 dark:text-gray-500 truncate">
+            {product.brand?.name}
+          </p>
+        </div>
+
+        {/* URL input + preview */}
+        <div className="flex-1 flex items-center gap-2 min-w-0">
+          {inputValue && (
+            <div className="shrink-0 w-8 h-8 rounded border border-gray-200 dark:border-gray-700 overflow-hidden bg-gray-100 dark:bg-gray-800">
+              <Image
+                src={inputValue}
+                alt=""
+                width={32}
+                height={32}
+                className="w-full h-full object-cover"
+                unoptimized
+              />
+            </div>
+          )}
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => onInputChange(e.target.value)}
+            placeholder="Paste image URL..."
+            className="flex-1 min-w-0 px-2.5 py-1.5 text-sm border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+          />
+        </div>
+
+        {/* Actions */}
+        <div className="flex items-center gap-1.5 shrink-0">
+          <input
+            ref={setRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) onUpload(file);
+              e.target.value = "";
+            }}
+          />
+          <button
+            type="button"
+            onClick={() => localFileRef.current?.click()}
+            disabled={uploading || saving}
+            className="px-2.5 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition disabled:opacity-50"
+            title="Upload image file"
+          >
+            {uploading ? (
+              <span className="inline-block w-3 h-3 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
+            ) : (
+              "📎"
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={onSave}
+            disabled={saving || uploading || !inputValue?.trim()}
+            className={`px-3 py-1.5 text-xs font-medium rounded-lg transition disabled:opacity-50 ${
+              success
+                ? "bg-green-600 text-white"
+                : "bg-purple-600 text-white hover:bg-purple-700"
+            }`}
+          >
+            {saving ? (
+              <span className="inline-block w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            ) : success ? (
+              "✓"
+            ) : (
+              "Save"
+            )}
+          </button>
+          {onCancel && (
+            <button
+              type="button"
+              onClick={onCancel}
+              className="px-2.5 py-1.5 text-xs font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition"
+            >
+              Cancel
+            </button>
+          )}
+        </div>
+      </div>
+
+      {error && (
+        <p className="text-xs text-red-500 dark:text-red-400 mt-1.5 pl-0 sm:pl-48 sm:ml-3">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
 export default function AdminPage() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
@@ -52,12 +166,16 @@ export default function AdminPage() {
 
   // Images tab
   const [missingImageProducts, setMissingImageProducts] = useState([]);
+  const [allImageProducts, setAllImageProducts] = useState([]);
   const [loadingImages, setLoadingImages] = useState(true);
+  const [imageView, setImageView] = useState("missing"); // "missing" | "all"
+  const [imageSearch, setImageSearch] = useState("");
   const [imageInputs, setImageInputs] = useState({}); // { [productId]: url string }
   const [imageUploading, setImageUploading] = useState({}); // { [productId]: boolean }
   const [imageSaving, setImageSaving] = useState({}); // { [productId]: boolean }
   const [imageErrors, setImageErrors] = useState({}); // { [productId]: string }
   const [imageSuccess, setImageSuccess] = useState({}); // { [productId]: true }
+  const [editingImageId, setEditingImageId] = useState(null); // product id being edited
   const fileInputRefs = useRef({});
 
   useEffect(() => {
@@ -99,6 +217,29 @@ export default function AdminPage() {
     } finally {
       setLoadingImages(false);
     }
+  }
+
+  async function fetchAllProducts() {
+    setLoadingImages(true);
+    try {
+      const res = await fetch("/api/admin/products/all-images");
+      if (res.ok) {
+        const data = await res.json();
+        setAllImageProducts(data.products);
+      }
+    } catch {
+      console.error("Failed to fetch all products");
+    } finally {
+      setLoadingImages(false);
+    }
+  }
+
+  function switchImageView(view) {
+    setImageView(view);
+    setImageSearch("");
+    setEditingImageId(null);
+    if (view === "missing") fetchMissingImages();
+    else fetchAllProducts();
   }
 
   function setImageInput(productId, value) {
@@ -145,12 +286,25 @@ export default function AdminPage() {
       if (!res.ok) throw new Error(data.error || "Failed to save");
 
       setImageSuccess((prev) => ({ ...prev, [productId]: true }));
-      // Remove from list after brief delay so user sees the checkmark
-      setTimeout(() => {
-        setMissingImageProducts((prev) => prev.filter((p) => p.id !== productId));
-        setImageInputs((prev) => { const n = { ...prev }; delete n[productId]; return n; });
-        setImageSuccess((prev) => { const n = { ...prev }; delete n[productId]; return n; });
-      }, 600);
+
+      if (imageView === "missing") {
+        // Remove from missing list after brief delay
+        setTimeout(() => {
+          setMissingImageProducts((prev) => prev.filter((p) => p.id !== productId));
+          setImageInputs((prev) => { const n = { ...prev }; delete n[productId]; return n; });
+          setImageSuccess((prev) => { const n = { ...prev }; delete n[productId]; return n; });
+        }, 600);
+      } else {
+        // Update in-place in all-products list
+        setAllImageProducts((prev) =>
+          prev.map((p) => (p.id === productId ? { ...p, imageUrl: url } : p))
+        );
+        setTimeout(() => {
+          setEditingImageId(null);
+          setImageInputs((prev) => { const n = { ...prev }; delete n[productId]; return n; });
+          setImageSuccess((prev) => { const n = { ...prev }; delete n[productId]; return n; });
+        }, 600);
+      }
     } catch (err) {
       setImageErrors((prev) => ({ ...prev, [productId]: err.message }));
     } finally {
@@ -511,19 +665,40 @@ export default function AdminPage() {
       {/* ── Images Tab ── */}
       {activeTab === "images" && (
         <div>
-          <div className="flex items-center justify-between mb-4">
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              {missingImageProducts.length === 0
-                ? "🎉 All products have images!"
-                : `${missingImageProducts.length} product${missingImageProducts.length === 1 ? "" : "s"} without images`}
-            </p>
-            <button
-              onClick={fetchMissingImages}
-              disabled={loadingImages}
-              className="text-xs text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 font-medium"
-            >
-              Refresh
-            </button>
+          {/* View toggle */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+            <div className="flex gap-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-0.5">
+              <button
+                onClick={() => switchImageView("missing")}
+                className={`px-3 py-1.5 text-xs font-medium rounded-md transition ${
+                  imageView === "missing"
+                    ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm"
+                    : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                }`}
+              >
+                Missing ({missingImageProducts.length})
+              </button>
+              <button
+                onClick={() => switchImageView("all")}
+                className={`px-3 py-1.5 text-xs font-medium rounded-md transition ${
+                  imageView === "all"
+                    ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm"
+                    : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                }`}
+              >
+                All Products
+              </button>
+            </div>
+
+            {imageView === "all" && (
+              <input
+                type="text"
+                value={imageSearch}
+                onChange={(e) => setImageSearch(e.target.value)}
+                placeholder="Search products..."
+                className="w-full sm:w-64 px-3 py-1.5 text-sm border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+              />
+            )}
           </div>
 
           {loadingImages ? (
@@ -534,121 +709,129 @@ export default function AdminPage() {
                 </div>
               ))}
             </div>
-          ) : missingImageProducts.length === 0 ? (
-            <div className="text-center py-16 text-gray-400 dark:text-gray-500">
-              <div className="text-4xl mb-3">✅</div>
-              <p className="text-lg">All products have images!</p>
-              <p className="text-sm mt-1">Nothing left to do here.</p>
-            </div>
-          ) : (
-            <div className="space-y-2">
-              {missingImageProducts.map((product) => {
-                const uploading = imageUploading[product.id];
-                const saving = imageSaving[product.id];
-                const error = imageErrors[product.id];
-                const success = imageSuccess[product.id];
-                const inputValue = imageInputs[product.id] || "";
-
-                return (
-                  <div
+          ) : imageView === "missing" ? (
+            /* ── Missing Images View ── */
+            missingImageProducts.length === 0 ? (
+              <div className="text-center py-16 text-gray-400 dark:text-gray-500">
+                <div className="text-4xl mb-3">✅</div>
+                <p className="text-lg">All products have images!</p>
+                <p className="text-sm mt-1">
+                  Switch to <button onClick={() => switchImageView("all")} className="text-purple-500 hover:text-purple-600 underline">All Products</button> to edit existing images.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {missingImageProducts.map((product) => (
+                  <ImageRow
                     key={product.id}
-                    className={`bg-white dark:bg-gray-900 border rounded-lg p-3 sm:p-4 transition-all ${
-                      success
-                        ? "border-green-300 dark:border-green-700 bg-green-50 dark:bg-green-900/10"
-                        : "border-gray-200 dark:border-gray-800"
-                    }`}
-                  >
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
-                      {/* Product info */}
-                      <div className="min-w-0 sm:w-48 shrink-0">
-                        <p className="font-medium text-sm text-gray-900 dark:text-gray-100 truncate">
-                          {product.name}
-                        </p>
-                        <p className="text-xs text-gray-400 dark:text-gray-500 truncate">
-                          {product.brand?.name}
-                        </p>
-                      </div>
-
-                      {/* URL input + preview */}
-                      <div className="flex-1 flex items-center gap-2 min-w-0">
-                        {inputValue && (
-                          <div className="shrink-0 w-8 h-8 rounded border border-gray-200 dark:border-gray-700 overflow-hidden bg-gray-100 dark:bg-gray-800">
+                    product={product}
+                    inputValue={imageInputs[product.id] || ""}
+                    uploading={imageUploading[product.id]}
+                    saving={imageSaving[product.id]}
+                    error={imageErrors[product.id]}
+                    success={imageSuccess[product.id]}
+                    onInputChange={(val) => setImageInput(product.id, val)}
+                    onUpload={(file) => handleFileUpload(product.id, file)}
+                    onSave={() => handleSaveImage(product.id)}
+                    fileInputRef={(el) => (fileInputRefs.current[product.id] = el)}
+                  />
+                ))}
+              </div>
+            )
+          ) : (
+            /* ── All Products View ── */
+            (() => {
+              const filtered = imageSearch.trim()
+                ? allImageProducts.filter(
+                    (p) =>
+                      p.name.toLowerCase().includes(imageSearch.toLowerCase()) ||
+                      p.brand?.name?.toLowerCase().includes(imageSearch.toLowerCase())
+                  )
+                : allImageProducts;
+              return filtered.length === 0 ? (
+                <div className="text-center py-16 text-gray-400 dark:text-gray-500">
+                  <p className="text-lg">No products found.</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {filtered.map((product) => {
+                    const isEditing = editingImageId === product.id;
+                    if (isEditing) {
+                      return (
+                        <ImageRow
+                          key={product.id}
+                          product={product}
+                          inputValue={imageInputs[product.id] ?? product.imageUrl ?? ""}
+                          uploading={imageUploading[product.id]}
+                          saving={imageSaving[product.id]}
+                          error={imageErrors[product.id]}
+                          success={imageSuccess[product.id]}
+                          onInputChange={(val) => setImageInput(product.id, val)}
+                          onUpload={(file) => handleFileUpload(product.id, file)}
+                          onSave={() => handleSaveImage(product.id)}
+                          onCancel={() => {
+                            setEditingImageId(null);
+                            setImageInputs((prev) => { const n = { ...prev }; delete n[product.id]; return n; });
+                            setImageErrors((prev) => { const n = { ...prev }; delete n[product.id]; return n; });
+                          }}
+                          fileInputRef={(el) => (fileInputRefs.current[product.id] = el)}
+                        />
+                      );
+                    }
+                    return (
+                      <div
+                        key={product.id}
+                        className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-3 sm:p-4 flex items-center gap-3"
+                      >
+                        {/* Current image or placeholder */}
+                        <div className="shrink-0 w-10 h-10 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                          {product.imageUrl ? (
                             <Image
-                              src={inputValue}
+                              src={product.imageUrl}
                               alt=""
-                              width={32}
-                              height={32}
+                              width={40}
+                              height={40}
                               className="w-full h-full object-cover"
                               unoptimized
                             />
-                          </div>
-                        )}
-                        <input
-                          type="text"
-                          value={inputValue}
-                          onChange={(e) => setImageInput(product.id, e.target.value)}
-                          placeholder="Paste image URL..."
-                          className="flex-1 min-w-0 px-2.5 py-1.5 text-sm border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
-                        />
-                      </div>
-
-                      {/* Actions */}
-                      <div className="flex items-center gap-1.5 shrink-0">
-                        {/* Hidden file input */}
-                        <input
-                          ref={(el) => (fileInputRefs.current[product.id] = el)}
-                          type="file"
-                          accept="image/*"
-                          className="hidden"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) handleFileUpload(product.id, file);
-                            e.target.value = "";
-                          }}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => fileInputRefs.current[product.id]?.click()}
-                          disabled={uploading || saving}
-                          className="px-2.5 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition disabled:opacity-50"
-                          title="Upload image file"
-                        >
-                          {uploading ? (
-                            <span className="inline-block w-3 h-3 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
                           ) : (
-                            "📎"
+                            <span className="text-gray-300 dark:text-gray-600 text-xs">—</span>
                           )}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleSaveImage(product.id)}
-                          disabled={saving || uploading || !inputValue?.trim()}
-                          className={`px-3 py-1.5 text-xs font-medium rounded-lg transition disabled:opacity-50 ${
-                            success
-                              ? "bg-green-600 text-white"
-                              : "bg-purple-600 text-white hover:bg-purple-700"
-                          }`}
-                        >
-                          {saving ? (
-                            <span className="inline-block w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                          ) : success ? (
-                            "✓"
-                          ) : (
-                            "Save"
-                          )}
-                        </button>
-                      </div>
-                    </div>
+                        </div>
 
-                    {error && (
-                      <p className="text-xs text-red-500 dark:text-red-400 mt-1.5 pl-0 sm:pl-48 sm:ml-3">
-                        {error}
-                      </p>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+                        {/* Product info */}
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium text-sm text-gray-900 dark:text-gray-100 truncate">
+                            {product.name}
+                          </p>
+                          <p className="text-xs text-gray-400 dark:text-gray-500 truncate">
+                            {product.brand?.name}
+                          </p>
+                        </div>
+
+                        {/* Status + Edit */}
+                        <div className="flex items-center gap-2 shrink-0">
+                          {product.imageUrl ? (
+                            <span className="text-xs text-green-600 dark:text-green-400">✓</span>
+                          ) : (
+                            <span className="text-xs text-gray-400">missing</span>
+                          )}
+                          <button
+                            onClick={() => {
+                              setEditingImageId(product.id);
+                              setImageInputs((prev) => ({ ...prev, [product.id]: product.imageUrl || "" }));
+                            }}
+                            className="px-2.5 py-1 text-xs font-medium text-purple-600 dark:text-purple-400 bg-purple-50 dark:bg-purple-900/20 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 transition"
+                          >
+                            Edit
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              );
+            })()
           )}
         </div>
       )}
