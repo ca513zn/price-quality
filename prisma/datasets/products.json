@@ -369,5 +369,11 @@
   { "name": "Mattel Barbie Dreamhouse", "brand": "Mattel", "description": "Iconic dollhouse playset.", "votePattern": [5, 7, 5, 7] },
   { "name": "Hasbro Monopoly Classic", "brand": "Hasbro", "description": "Classic property trading board game.", "votePattern": [3, 5, 6, 8] },
 
-  { "name": "Nestlé KitKat", "brand": "Nestlé", "description": "Iconic chocolate wafer bar.", "votePattern": [2, 4, 5, 7] }
+  { "name": "Nestlé KitKat", "brand": "Nestlé", "description": "Iconic chocolate wafer bar.", "votePattern": [2, 4, 5, 7] },
+
+  { "name": "Red Bull Energy Drink", "brand": "Red Bull", "description": "Popular energy drink.", "votePattern": [3, 5, 5, 7] },
+  { "name": "Monster Energy", "brand": "Monster", "description": "High caffeine energy drink.", "votePattern": [2, 4, 5, 7] },
+  { "name": "Corona Extra", "brand": "Corona", "description": "Mexican lager beer.", "votePattern": [3, 5, 5, 7] },
+  { "name": "Heineken Lager", "brand": "Heineken", "description": "Dutch premium lager.", "votePattern": [4, 6, 5, 7] },
+  { "name": "Evian Mineral Water", "brand": "Evian", "description": "Premium bottled mineral water.", "votePattern": [6, 8, 5, 7] }
 ]

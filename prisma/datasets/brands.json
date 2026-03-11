@@ -102,5 +102,10 @@
   { "name": "Ninja", "description": "American brand of kitchen appliances.", "categories": ["Home Appliances"] },
   { "name": "Peloton", "description": "American exercise equipment and media company.", "categories": ["Health & Wellness", "Sports & Outdoors"] },
   { "name": "Theragun", "description": "American wellness technology company.", "categories": ["Health & Wellness"] },
-  { "name": "Oura", "description": "Finnish health technology company making smart rings.", "categories": ["Wearables", "Health & Wellness"] }
+  { "name": "Oura", "description": "Finnish health technology company making smart rings.", "categories": ["Wearables", "Health & Wellness"] },
+  { "name": "Red Bull", "description": "Austrian energy drink company.", "categories": ["Food & Beverages"] },
+  { "name": "Monster", "description": "American energy drink company.", "categories": ["Food & Beverages"] },
+  { "name": "Corona", "description": "Mexican beer brand produced by Grupo Modelo.", "categories": ["Food & Beverages"] },
+  { "name": "Heineken", "description": "Dutch brewing company.", "categories": ["Food & Beverages"] },
+  { "name": "Evian", "description": "French bottled mineral water brand.", "categories": ["Food & Beverages"] }
 ]
