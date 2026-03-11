@@ -39,6 +39,7 @@ export default async function HomePage() {
     id: p.id,
     name: p.name,
     slug: p.slug,
+    imageUrl: p.imageUrl || null,
     avgPriceScore: p.avgPriceScore,
     avgQualityScore: p.avgQualityScore,
     totalVotes: p.totalVotes,

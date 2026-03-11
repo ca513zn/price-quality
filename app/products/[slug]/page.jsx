@@ -1,6 +1,7 @@
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { getQuadrant, getQuadrantColor } from "@/lib/utils";
 import ProductVoteSection from "./ProductVoteSection";
 
@@ -58,6 +59,20 @@ export default async function ProductPage({ params }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
         {/* Product Info */}
         <div>
+          {/* Product Image */}
+          {product.imageUrl && (
+            <div className="mb-5 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-900">
+              <Image
+                src={product.imageUrl}
+                alt={product.name}
+                width={600}
+                height={400}
+                className="w-full h-48 sm:h-64 object-contain"
+                unoptimized
+              />
+            </div>
+          )}
+
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">{product.name}</h1>
           <Link
             href={`/brands/${product.brand.slug}`}

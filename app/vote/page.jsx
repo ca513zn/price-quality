@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 const PRICE_LABELS = {
   1: "Dirt cheap",
@@ -332,6 +333,20 @@ export default function QuickVotePage() {
         >
           {/* Product card */}
           <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl p-6 mb-6">
+            {/* Product image */}
+            {currentProduct.imageUrl && (
+              <div className="mb-4 rounded-xl overflow-hidden bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                <Image
+                  src={currentProduct.imageUrl}
+                  alt={currentProduct.name}
+                  width={500}
+                  height={300}
+                  className="w-full h-36 sm:h-44 object-contain"
+                  unoptimized
+                />
+              </div>
+            )}
+
             {categories.length > 0 && (
               <div className="flex flex-wrap gap-1.5 mb-3">
                 {categories.map((cat) => (
