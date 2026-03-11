@@ -149,29 +149,30 @@ export default function MyVotesPage() {
             return (
               <div
                 key={vote.id}
-                className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-5"
+                className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-4 sm:p-5"
               >
-                <div className="flex items-start justify-between mb-3">
-                  <div>
+                {/* Product info */}
+                <div className="mb-3">
+                  <div className="flex items-center gap-2 flex-wrap mb-1">
                     <Link
                       href={`/products/${vote.product.slug}`}
-                      className="text-lg font-semibold text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition"
+                      className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition"
                     >
                       {vote.product.name}
                     </Link>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      {vote.product.brand?.name} · Voted {new Date(vote.createdAt).toLocaleDateString()}
-                      {vote.updatedAt && vote.updatedAt !== vote.createdAt && (
-                        <span> · Edited {new Date(vote.updatedAt).toLocaleDateString()}</span>
-                      )}
-                    </p>
+                    <span
+                      className="text-xs font-medium px-2 py-0.5 rounded-full shrink-0"
+                      style={{ backgroundColor: `${quadrantColor}20`, color: quadrantColor }}
+                    >
+                      {quadrant}
+                    </span>
                   </div>
-                  <span
-                    className="text-xs font-medium px-2.5 py-1 rounded-full shrink-0"
-                    style={{ backgroundColor: `${quadrantColor}20`, color: quadrantColor }}
-                  >
-                    {quadrant}
-                  </span>
+                  <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                    {vote.product.brand?.name} · Voted {new Date(vote.createdAt).toLocaleDateString()}
+                    {vote.updatedAt && vote.updatedAt !== vote.createdAt && (
+                      <span> · Edited {new Date(vote.updatedAt).toLocaleDateString()}</span>
+                    )}
+                  </p>
                 </div>
 
                 {isEditing ? (
@@ -227,8 +228,8 @@ export default function MyVotesPage() {
                     </div>
                   </div>
                 ) : (
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <div className="flex gap-4 sm:gap-6 text-sm">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex gap-3 sm:gap-6 text-xs sm:text-sm">
                       <span className="text-gray-600 dark:text-gray-400">
                         Price: <strong className="text-gray-900 dark:text-gray-100">{vote.priceScore}</strong>/10
                       </span>
@@ -236,16 +237,16 @@ export default function MyVotesPage() {
                         Quality: <strong className="text-gray-900 dark:text-gray-100">{vote.qualityScore}</strong>/10
                       </span>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-3 shrink-0">
                       <button
                         onClick={() => startEdit(vote)}
-                        className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium transition"
+                        className="text-xs sm:text-sm text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-medium transition"
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => deleteVote(vote.id)}
-                        className="text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 font-medium transition"
+                        className="text-xs sm:text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 font-medium transition"
                       >
                         Delete
                       </button>
