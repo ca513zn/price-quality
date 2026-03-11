@@ -66,7 +66,7 @@ export async function PUT(request) {
     }
 
     const body = await request.json();
-    const { id, name, brandId, description } = body;
+    const { id, name, brandId, description, imageUrl } = body;
 
     if (!id) {
       return NextResponse.json({ error: "Product ID is required" }, { status: 400 });
@@ -104,6 +104,7 @@ export async function PUT(request) {
         slug,
         brandId,
         description: description?.trim() || null,
+        imageUrl: imageUrl?.trim() || null,
       },
       include: { brand: { select: { name: true } } },
     });
@@ -111,6 +112,45 @@ export async function PUT(request) {
     return NextResponse.json({ product });
   } catch (error) {
     console.error("Error updating product:", error);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
+}
+
+// Update product image (admin only)
+export async function PATCH(request) {
+  try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    if (user.role !== "ADMIN") {
+      return NextResponse.json({ error: "Admin access required" }, { status: 403 });
+    }
+
+    const body = await request.json();
+    const { id, imageUrl } = body;
+
+    if (!id) {
+      return NextResponse.json({ error: "Product ID is required" }, { status: 400 });
+    }
+    if (!imageUrl || !imageUrl.trim()) {
+      return NextResponse.json({ error: "Image URL is required" }, { status: 400 });
+    }
+
+    const existing = await prisma.product.findUnique({ where: { id } });
+    if (!existing) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    }
+
+    const product = await prisma.product.update({
+      where: { id },
+      data: { imageUrl: imageUrl.trim() },
+      include: { brand: { select: { name: true } } },
+    });
+
+    return NextResponse.json({ product });
+  } catch (error) {
+    console.error("Error updating product image:", error);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

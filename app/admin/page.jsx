@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/AuthProvider";
+import Image from "next/image";
 
 const STATUS_STYLES = {
   PENDING: { label: "Pending", bg: "bg-yellow-100 dark:bg-yellow-900/30", text: "text-yellow-800 dark:text-yellow-200" },
@@ -49,6 +50,16 @@ export default function AdminPage() {
   const [modLoading, setModLoading] = useState(false);
   const [modError, setModError] = useState(null);
 
+  // Images tab
+  const [missingImageProducts, setMissingImageProducts] = useState([]);
+  const [loadingImages, setLoadingImages] = useState(true);
+  const [imageInputs, setImageInputs] = useState({}); // { [productId]: url string }
+  const [imageUploading, setImageUploading] = useState({}); // { [productId]: boolean }
+  const [imageSaving, setImageSaving] = useState({}); // { [productId]: boolean }
+  const [imageErrors, setImageErrors] = useState({}); // { [productId]: string }
+  const [imageSuccess, setImageSuccess] = useState({}); // { [productId]: true }
+  const fileInputRefs = useRef({});
+
   useEffect(() => {
     if (!authLoading && (!user || user.role !== "ADMIN")) {
       router.push("/");
@@ -58,6 +69,7 @@ export default function AdminPage() {
   useEffect(() => {
     fetchBrands();
     fetchSubmissions();
+    fetchMissingImages();
   }, []);
 
   async function fetchBrands() {
@@ -71,6 +83,78 @@ export default function AdminPage() {
       console.error("Failed to fetch brands");
     } finally {
       setLoadingBrands(false);
+    }
+  }
+
+  async function fetchMissingImages() {
+    setLoadingImages(true);
+    try {
+      const res = await fetch("/api/admin/products/missing-images");
+      if (res.ok) {
+        const data = await res.json();
+        setMissingImageProducts(data.products);
+      }
+    } catch {
+      console.error("Failed to fetch products without images");
+    } finally {
+      setLoadingImages(false);
+    }
+  }
+
+  function setImageInput(productId, value) {
+    setImageInputs((prev) => ({ ...prev, [productId]: value }));
+    setImageErrors((prev) => ({ ...prev, [productId]: null }));
+    setImageSuccess((prev) => ({ ...prev, [productId]: false }));
+  }
+
+  async function handleFileUpload(productId, file) {
+    if (!file) return;
+    setImageUploading((prev) => ({ ...prev, [productId]: true }));
+    setImageErrors((prev) => ({ ...prev, [productId]: null }));
+
+    try {
+      const form = new FormData();
+      form.append("file", file);
+      const res = await fetch("/api/upload", { method: "POST", body: form });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Upload failed");
+      setImageInputs((prev) => ({ ...prev, [productId]: data.url }));
+    } catch (err) {
+      setImageErrors((prev) => ({ ...prev, [productId]: err.message }));
+    } finally {
+      setImageUploading((prev) => ({ ...prev, [productId]: false }));
+    }
+  }
+
+  async function handleSaveImage(productId) {
+    const url = imageInputs[productId]?.trim();
+    if (!url) {
+      setImageErrors((prev) => ({ ...prev, [productId]: "Enter a URL or upload an image" }));
+      return;
+    }
+    setImageSaving((prev) => ({ ...prev, [productId]: true }));
+    setImageErrors((prev) => ({ ...prev, [productId]: null }));
+
+    try {
+      const res = await fetch("/api/admin/products", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: productId, imageUrl: url }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to save");
+
+      setImageSuccess((prev) => ({ ...prev, [productId]: true }));
+      // Remove from list after brief delay so user sees the checkmark
+      setTimeout(() => {
+        setMissingImageProducts((prev) => prev.filter((p) => p.id !== productId));
+        setImageInputs((prev) => { const n = { ...prev }; delete n[productId]; return n; });
+        setImageSuccess((prev) => { const n = { ...prev }; delete n[productId]; return n; });
+      }, 600);
+    } catch (err) {
+      setImageErrors((prev) => ({ ...prev, [productId]: err.message }));
+    } finally {
+      setImageSaving((prev) => ({ ...prev, [productId]: false }));
     }
   }
 
@@ -231,6 +315,7 @@ export default function AdminPage() {
       <div className="flex gap-1 mb-6 sm:mb-8 border-b border-gray-200 dark:border-gray-800 overflow-x-auto scrollbar-hide">
         {[
           { key: "submissions", label: "Submissions", count: submissions.length },
+          { key: "images", label: "Images", count: missingImageProducts.length },
           { key: "create", label: "Create" },
         ].map((tab) => (
           <button
@@ -418,6 +503,151 @@ export default function AdminPage() {
                   </div>
                 </form>
               </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── Images Tab ── */}
+      {activeTab === "images" && (
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              {missingImageProducts.length === 0
+                ? "🎉 All products have images!"
+                : `${missingImageProducts.length} product${missingImageProducts.length === 1 ? "" : "s"} without images`}
+            </p>
+            <button
+              onClick={fetchMissingImages}
+              disabled={loadingImages}
+              className="text-xs text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300 font-medium"
+            >
+              Refresh
+            </button>
+          </div>
+
+          {loadingImages ? (
+            <div className="space-y-2">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg p-4 animate-pulse">
+                  <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-1/3" />
+                </div>
+              ))}
+            </div>
+          ) : missingImageProducts.length === 0 ? (
+            <div className="text-center py-16 text-gray-400 dark:text-gray-500">
+              <div className="text-4xl mb-3">✅</div>
+              <p className="text-lg">All products have images!</p>
+              <p className="text-sm mt-1">Nothing left to do here.</p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              {missingImageProducts.map((product) => {
+                const uploading = imageUploading[product.id];
+                const saving = imageSaving[product.id];
+                const error = imageErrors[product.id];
+                const success = imageSuccess[product.id];
+                const inputValue = imageInputs[product.id] || "";
+
+                return (
+                  <div
+                    key={product.id}
+                    className={`bg-white dark:bg-gray-900 border rounded-lg p-3 sm:p-4 transition-all ${
+                      success
+                        ? "border-green-300 dark:border-green-700 bg-green-50 dark:bg-green-900/10"
+                        : "border-gray-200 dark:border-gray-800"
+                    }`}
+                  >
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                      {/* Product info */}
+                      <div className="min-w-0 sm:w-48 shrink-0">
+                        <p className="font-medium text-sm text-gray-900 dark:text-gray-100 truncate">
+                          {product.name}
+                        </p>
+                        <p className="text-xs text-gray-400 dark:text-gray-500 truncate">
+                          {product.brand?.name}
+                        </p>
+                      </div>
+
+                      {/* URL input + preview */}
+                      <div className="flex-1 flex items-center gap-2 min-w-0">
+                        {inputValue && (
+                          <div className="shrink-0 w-8 h-8 rounded border border-gray-200 dark:border-gray-700 overflow-hidden bg-gray-100 dark:bg-gray-800">
+                            <Image
+                              src={inputValue}
+                              alt=""
+                              width={32}
+                              height={32}
+                              className="w-full h-full object-cover"
+                              unoptimized
+                            />
+                          </div>
+                        )}
+                        <input
+                          type="text"
+                          value={inputValue}
+                          onChange={(e) => setImageInput(product.id, e.target.value)}
+                          placeholder="Paste image URL..."
+                          className="flex-1 min-w-0 px-2.5 py-1.5 text-sm border border-gray-300 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition"
+                        />
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        {/* Hidden file input */}
+                        <input
+                          ref={(el) => (fileInputRefs.current[product.id] = el)}
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) handleFileUpload(product.id, file);
+                            e.target.value = "";
+                          }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => fileInputRefs.current[product.id]?.click()}
+                          disabled={uploading || saving}
+                          className="px-2.5 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition disabled:opacity-50"
+                          title="Upload image file"
+                        >
+                          {uploading ? (
+                            <span className="inline-block w-3 h-3 border-2 border-gray-400 border-t-transparent rounded-full animate-spin" />
+                          ) : (
+                            "📎"
+                          )}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleSaveImage(product.id)}
+                          disabled={saving || uploading || !inputValue?.trim()}
+                          className={`px-3 py-1.5 text-xs font-medium rounded-lg transition disabled:opacity-50 ${
+                            success
+                              ? "bg-green-600 text-white"
+                              : "bg-purple-600 text-white hover:bg-purple-700"
+                          }`}
+                        >
+                          {saving ? (
+                            <span className="inline-block w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                          ) : success ? (
+                            "✓"
+                          ) : (
+                            "Save"
+                          )}
+                        </button>
+                      </div>
+                    </div>
+
+                    {error && (
+                      <p className="text-xs text-red-500 dark:text-red-400 mt-1.5 pl-0 sm:pl-48 sm:ml-3">
+                        {error}
+                      </p>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>
